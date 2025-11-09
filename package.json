@@ -1,0 +1,42 @@
+{
+  "name": "electron-react-app",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "اپلیکیشن Electron با React",
+  "main": "main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "electron": "set NODE_ENV=development && electron .",
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && set NODE_ENV=development && electron .\""
+  },
+  "keywords": [
+    "electron",
+    "react"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@react-pdf/renderer": "^4.3.1",
+    "chart.js": "^4.5.1",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "date-fns": "^4.1.0",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.0",
+    "electron": "^27.0.0",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.0",
+    "vite": "^5.0.0",
+    "wait-on": "^7.2.0"
+  }
+}

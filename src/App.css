@@ -1,0 +1,7 @@
+.app {
+  @apply flex h-screen text-white;
+}
+
+.main-content {
+  @apply flex-1 overflow-auto;
+}
