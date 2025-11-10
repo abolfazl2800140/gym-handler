@@ -52,6 +52,7 @@ app.use(activityLoggerMiddleware);
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/users', require('./routes/users'));
 app.use('/api/members', require('./routes/members'));
 app.use('/api/transactions', require('./routes/transactions'));
 app.use('/api/attendance', require('./routes/attendance'));

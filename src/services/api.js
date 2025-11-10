@@ -6,6 +6,7 @@ import {
   transformAttendanceFromAPI,
   transformAttendanceToAPI,
 } from '../utils/dataTransform';
+import { getAuthHeaders } from './auth';
 
 // Base API configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -17,6 +18,7 @@ const apiCall = async (endpoint, options = {}) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
+      ...getAuthHeaders(), // اضافه کردن token به همه request ها
       ...options.headers,
     },
     ...options,
@@ -195,6 +197,40 @@ export const activityLogsAPI = {
     method: 'DELETE',
     body: JSON.stringify({ days }),
   }),
+};
+
+// Users API
+export const usersAPI = {
+  getAll: () => apiCall('/users'),
+  
+  getById: (id) => apiCall(`/users/${id}`),
+  
+  create: (userData) => apiCall('/users', {
+    method: 'POST',
+    body: JSON.stringify(userData),
+  }),
+  
+  update: (id, userData) => apiCall(`/users/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(userData),
+  }),
+  
+  delete: (id) => apiCall(`/users/${id}`, {
+    method: 'DELETE',
+  }),
+  
+  changePassword: (id, passwordData) => apiCall(`/users/${id}/change-password`, {
+    method: 'PUT',
+    body: JSON.stringify(passwordData),
+  }),
+  
+  toggleStatus: (id) => apiCall(`/users/${id}/toggle-status`, {
+    method: 'PUT',
+  }),
+  
+  getStats: (id) => apiCall(`/users/${id}/stats`),
+  
+  getActivities: (id, limit = 20) => apiCall(`/users/${id}/activities?limit=${limit}`),
 };
 
 // Health check
