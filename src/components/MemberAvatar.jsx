@@ -18,6 +18,7 @@ function MemberAvatar({ firstName, lastName, size = "md" }) {
     sm: "w-8 h-8 text-sm",
     md: "w-10 h-10 text-base",
     lg: "w-16 h-16 text-2xl",
+    xl: "w-24 h-24 text-4xl",
   };
 
   return (

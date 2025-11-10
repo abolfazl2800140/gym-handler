@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Users from "./pages/Users";
 import UserDetail from "./pages/UserDetail";
 import Members from "./pages/Members";
+import MemberProfile from "./pages/MemberProfile";
 import Attendance from "./pages/Attendance";
 import Financial from "./pages/Financial";
 import Reports from "./pages/Reports";
@@ -59,6 +60,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Members />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/members/:id"
+              element={
+                <ProtectedRoute>
+                  <MemberProfile />
                 </ProtectedRoute>
               }
             />
