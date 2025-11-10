@@ -1,21 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const authController = require('../controllers/authController');
 
-// Placeholder for authentication routes
-// Will be implemented in phase 2
+// POST /api/auth/register - Register new user
+router.post('/register', authController.register);
 
-router.post('/register', (req, res) => {
-  res.status(501).json({ 
-    success: false, 
-    message: 'Authentication not implemented yet' 
-  });
-});
+// POST /api/auth/login - Login user
+router.post('/login', authController.login);
 
-router.post('/login', (req, res) => {
-  res.status(501).json({ 
-    success: false, 
-    message: 'Authentication not implemented yet' 
-  });
-});
+// GET /api/auth/me - Get current user (requires authentication middleware)
+// Note: This route will be protected with authenticateToken middleware in task 3
+router.get('/me', authController.getCurrentUser);
 
 module.exports = router;

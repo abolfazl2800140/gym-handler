@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { activityLogsAPI } from "../services/api";
+import SimplePersianDatePicker from "../components/SimplePersianDatePicker";
 
 function ActivityLogs() {
     const [logs, setLogs] = useState([]);
@@ -146,7 +147,7 @@ function ActivityLogs() {
                     <select
                         value={filters.action}
                         onChange={(e) => handleFilterChange("action", e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
                     >
                         <option value="">همه عملیات</option>
                         <option value="ایجاد">ایجاد</option>
@@ -159,7 +160,7 @@ function ActivityLogs() {
                     <select
                         value={filters.entityType}
                         onChange={(e) => handleFilterChange("entityType", e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
                     >
                         <option value="">همه بخش‌ها</option>
                         <option value="عضو">عضو</option>
@@ -173,21 +174,21 @@ function ActivityLogs() {
                         value={filters.username}
                         onChange={(e) => handleFilterChange("username", e.target.value)}
                         placeholder="نام کاربر..."
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
                     />
 
-                    <input
-                        type="date"
+                    <SimplePersianDatePicker
+                        key={`start-${filters.startDate}`}
                         value={filters.startDate}
-                        onChange={(e) => handleFilterChange("startDate", e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        onChange={(date) => handleFilterChange("startDate", date)}
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full text-black"
                     />
 
-                    <input
-                        type="date"
+                    <SimplePersianDatePicker
+                        key={`end-${filters.endDate}`}
                         value={filters.endDate}
-                        onChange={(e) => handleFilterChange("endDate", e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        onChange={(date) => handleFilterChange("endDate", date)}
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full text-black"
                     />
                 </div>
                 <button
