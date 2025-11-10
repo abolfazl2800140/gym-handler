@@ -4,6 +4,7 @@
 -- ==========================================
 
 -- حذف جداول قدیمی (اگه وجود داشته باشن)
+DROP TABLE IF EXISTS activity_logs CASCADE;
 DROP TABLE IF EXISTS attendance_records CASCADE;
 DROP TABLE IF EXISTS attendance CASCADE;
 DROP TABLE IF EXISTS transactions CASCADE;
@@ -70,12 +71,28 @@ CREATE TABLE attendance_records (
     UNIQUE(attendance_id, member_id)
 );
 
+-- ساخت جدول لاگ فعالیت‌ها
+CREATE TABLE activity_logs (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    username VARCHAR(50),
+    action VARCHAR(50) NOT NULL,
+    entity_type VARCHAR(50),
+    entity_id INTEGER,
+    description TEXT,
+    ip_address VARCHAR(45),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- ساخت Indexes برای سرعت بیشتر
 CREATE INDEX idx_members_phone ON members(phone);
 CREATE INDEX idx_transactions_date ON transactions(date);
 CREATE INDEX idx_transactions_member ON transactions(member_id);
 CREATE INDEX idx_attendance_date ON attendance(date);
 CREATE INDEX idx_attendance_records_member ON attendance_records(member_id);
+CREATE INDEX idx_activity_logs_user ON activity_logs(user_id);
+CREATE INDEX idx_activity_logs_action ON activity_logs(action);
+CREATE INDEX idx_activity_logs_created_at ON activity_logs(created_at);
 
 -- اضافه کردن داده‌های نمونه
 INSERT INTO members (first_name, last_name, phone, birth_date, member_type, membership_level, join_date, subscription_status)

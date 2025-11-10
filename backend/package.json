@@ -7,8 +7,14 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "init-db": "node scripts/initDatabase.js",
+    "create-super-admin": "node scripts/createSuperAdmin.js",
+    "create-activity-logs": "node scripts/createActivityLogsTable.js",
+    "add-user-fields": "node scripts/addUserFields.js",
+    "add-is-active": "node scripts/addIsActiveField.js",
     "test-connection": "node test-connection.js",
-    "test-api": "node test-api.js"
+    "test-api": "node test-api.js",
+    "test-auth": "node test-auth.js",
+    "test-users": "node test-users-api.js"
   },
   "keywords": [
     "gym",
