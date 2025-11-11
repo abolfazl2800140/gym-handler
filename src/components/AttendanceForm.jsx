@@ -7,6 +7,7 @@ function AttendanceForm({ date, members, onSave, onCancel, existingAttendance })
 
   useEffect(() => {
     if (existingAttendance) {
+      console.log('Loading existing attendance:', existingAttendance);
       setAttendanceData(existingAttendance.records || {});
       setNotes(existingAttendance.notes || "");
     } else {
@@ -17,6 +18,8 @@ function AttendanceForm({ date, members, onSave, onCancel, existingAttendance })
           reason: "",
         };
       });
+      console.log('Initialized attendance data for', members.length, 'members');
+      console.log('Initial data:', initialData);
       setAttendanceData(initialData);
     }
   }, [existingAttendance, members]);
@@ -55,11 +58,21 @@ function AttendanceForm({ date, members, onSave, onCancel, existingAttendance })
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({
+    
+    // Validation
+    if (!attendanceData || Object.keys(attendanceData).length === 0) {
+      alert('لطفاً حداقل یک عضو را انتخاب کنید');
+      return;
+    }
+    
+    const dataToSave = {
       date,
       records: attendanceData,
       notes,
-    });
+    };
+    console.log('Submitting attendance data:', dataToSave);
+    console.log('Number of records:', Object.keys(attendanceData).length);
+    onSave(dataToSave);
   };
 
   const filteredMembers = members.filter(

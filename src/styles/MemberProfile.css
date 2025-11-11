@@ -130,7 +130,7 @@
 }
 
 .tabs button.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
   color: white;
 }
 
@@ -186,18 +186,18 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
   border-radius: 16px;
   padding: 24px;
   text-align: center;
   color: white;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 24px rgba(66, 153, 225, 0.3);
   transition: all 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 32px rgba(66, 153, 225, 0.4);
 }
 
 .stat-icon {

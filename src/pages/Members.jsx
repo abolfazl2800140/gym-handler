@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaUsers, FaTable, FaTh, FaPlus, FaEdit, FaTrash, FaUser, FaPhone, FaTag, FaStar, FaCalendar, FaCheck, FaSearch } from "react-icons/fa";
 import MemberAvatar from "../components/MemberAvatar";
 import MemberBadge from "../components/MemberBadge";
 import SearchBar from "../components/SearchBar";
@@ -25,7 +26,6 @@ function Members() {
   const [sortDirection, setSortDirection] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [displayedCards, setDisplayedCards] = useState(12);
 
   useEffect(() => {
     fetchMembers();
@@ -207,35 +207,16 @@ function Members() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Infinite scroll
-  const visibleCards = filteredAndSortedMembers.slice(0, displayedCards);
-
   useEffect(() => {
     setCurrentPage(1);
-    setDisplayedCards(12);
   }, [searchTerm, memberTypeFilter, statusFilter, sortField, sortDirection]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (viewMode !== 'card') return;
-      
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight;
-      const clientHeight = document.documentElement.clientHeight;
-      
-      if (scrollTop + clientHeight >= scrollHeight - 100) {
-        setDisplayedCards(prev => Math.min(prev + 12, filteredAndSortedMembers.length));
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [viewMode, filteredAndSortedMembers.length]);
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">👥 مدیریت اعضا</h1>
+        <h1 className="text-3xl font-bold flex items-center gap-2">
+          <FaUsers /> مدیریت اعضا
+        </h1>
         <div className="flex gap-3">
           <div className="flex bg-white/10 backdrop-blur-lg rounded-lg p-1">
             <button
@@ -247,7 +228,7 @@ function Members() {
               }`}
               title="نمای جدولی"
             >
-              📊
+              <FaTable />
             </button>
             <button
               onClick={() => setViewMode("card")}
@@ -258,7 +239,7 @@ function Members() {
               }`}
               title="نمای کارتی"
             >
-              🎴
+              <FaTh />
             </button>
           </div>
           
@@ -267,7 +248,7 @@ function Members() {
             disabled={loading}
             className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold transition-all disabled:opacity-50 flex items-center gap-2 hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(72,187,120,0.3)]"
           >
-            <span className="text-xl">+</span>
+            <FaPlus />
             افزودن عضو جدید
           </button>
         </div>
@@ -295,16 +276,18 @@ function Members() {
       />
 
       {viewMode === "table" && (
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-          <table className="w-full">
-            <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col" style={{ height: 'calc(100vh - 200px)' }}>
+          {/* جدول با header ثابت */}
+          <div className="overflow-auto flex-1">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200 sticky top-0 z-10">
               <tr>
                 <th 
                   className="px-6 py-4 text-gray-700 text-right text-sm font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
                   onClick={() => handleSort('name')}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span>👤 عضو</span>
+                    <span className="flex items-center gap-2"><FaUser /> عضو</span>
                     {getSortIcon('name')}
                   </div>
                 </th>
@@ -313,7 +296,7 @@ function Members() {
                   onClick={() => handleSort('phone')}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span>📱 شماره تماس</span>
+                    <span className="flex items-center gap-2"><FaPhone /> شماره تماس</span>
                     {getSortIcon('phone')}
                   </div>
                 </th>
@@ -322,7 +305,7 @@ function Members() {
                   onClick={() => handleSort('memberType')}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span>🏷️ نوع عضویت</span>
+                    <span className="flex items-center gap-2"><FaTag /> نوع عضویت</span>
                     {getSortIcon('memberType')}
                   </div>
                 </th>
@@ -331,7 +314,7 @@ function Members() {
                   onClick={() => handleSort('membershipLevel')}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span>⭐ سطح عضویت</span>
+                    <span className="flex items-center gap-2"><FaStar /> سطح عضویت</span>
                     {getSortIcon('membershipLevel')}
                   </div>
                 </th>
@@ -340,7 +323,7 @@ function Members() {
                   onClick={() => handleSort('joinDate')}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span>📅 تاریخ عضویت</span>
+                    <span className="flex items-center gap-2"><FaCalendar /> تاریخ عضویت</span>
                     {getSortIcon('joinDate')}
                   </div>
                 </th>
@@ -349,12 +332,12 @@ function Members() {
                   onClick={() => handleSort('status')}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span>✓ وضعیت</span>
+                    <span className="flex items-center gap-2"><FaCheck /> وضعیت</span>
                     {getSortIcon('status')}
                   </div>
                 </th>
                 <th className="px-6 py-4 text-gray-700 text-center text-sm font-semibold">
-                  ⚙️ عملیات
+                  عملیات
                 </th>
               </tr>
             </thead>
@@ -410,7 +393,7 @@ function Members() {
                         className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition-all hover:shadow-lg"
                         title="ویرایش عضو"
                       >
-                        ✏️
+                        <FaEdit />
                       </button>
                       <button
                         onClick={(e) => {
@@ -420,7 +403,7 @@ function Members() {
                         className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium transition-all hover:shadow-lg"
                         title="حذف عضو"
                       >
-                        🗑️
+                        <FaTrash />
                       </button>
                     </div>
                   </td>
@@ -431,16 +414,16 @@ function Members() {
 
           {filteredAndSortedMembers.length === 0 && (
             <div className="text-center py-16 bg-gray-50">
-              <div className="text-6xl mb-4">🔍</div>
+              <div className="text-6xl mb-4"><FaSearch className="inline text-gray-300" /></div>
               <p className="text-gray-600 text-lg font-medium">هیچ عضوی یافت نشد</p>
               <p className="text-gray-400 text-sm mt-2">لطفاً فیلترها را تغییر دهید یا عضو جدیدی اضافه کنید</p>
             </div>
           )}
-        </div>
-      )}
+          </div>
 
-      {viewMode === "table" && filteredAndSortedMembers.length > 0 && (
-        <div className="flex justify-start items-center gap-2 mt-6">
+          {/* Pagination داخل جدول */}
+          {filteredAndSortedMembers.length > 0 && (
+            <div className="flex justify-start items-center gap-2 p-4 bg-gray-50 border-t border-gray-200">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
@@ -484,13 +467,15 @@ function Members() {
           >
             بعدی
           </button>
+            </div>
+          )}
         </div>
       )}
 
       {viewMode === "card" && (
-        <>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {visibleCards.map((member) => (
+        <div className="overflow-auto" style={{ height: 'calc(100vh - 160px)' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
+            {filteredAndSortedMembers.map((member) => (
             <div
               key={member.id}
               onClick={() => navigate(`/members/${member.id}`)}
@@ -531,18 +516,18 @@ function Members() {
                     e.stopPropagation();
                     handleEditMember(member);
                   }}
-                  className="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition-colors"
+                  className="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition-colors flex items-center justify-center gap-2"
                 >
-                  ✏️ ویرایش
+                  <FaEdit /> ویرایش
                 </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDeleteClick(member.id);
                   }}
-                  className="flex-1 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium transition-colors"
+                  className="flex-1 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium transition-colors flex items-center justify-center gap-2"
                 >
-                  🗑️ حذف
+                  <FaTrash /> حذف
                 </button>
               </div>
             </div>
@@ -550,25 +535,13 @@ function Members() {
 
           {filteredAndSortedMembers.length === 0 && (
             <div className="col-span-full text-center py-16 bg-white rounded-xl">
-              <div className="text-6xl mb-4">🔍</div>
+              <div className="text-6xl mb-4"><FaSearch className="inline text-gray-300" /></div>
               <p className="text-gray-600 text-lg font-medium">هیچ عضوی یافت نشد</p>
               <p className="text-gray-400 text-sm mt-2">لطفاً فیلترها را تغییر دهید یا عضو جدیدی اضافه کنید</p>
             </div>
           )}
-        </div>
-
-        {displayedCards < filteredAndSortedMembers.length && (
-          <div className="text-center mt-8">
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-lg shadow-md text-gray-600">
-              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span className="font-medium">در حال بارگذاری...</span>
-            </div>
           </div>
-        )}
-        </>
+        </div>
       )}
 
       {showForm && (

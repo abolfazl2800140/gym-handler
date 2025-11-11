@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { FaChartBar, FaSearch, FaUser, FaCheckCircle, FaEdit, FaTrash, FaClipboardList, FaRobot } from "react-icons/fa";
 import { activityLogsAPI } from "../services/api";
 import SimplePersianDatePicker from "../components/SimplePersianDatePicker";
 
@@ -82,19 +83,21 @@ function ActivityLogs() {
 
     const getEntityIcon = (entityType) => {
         const icons = {
-            عضو: "👤",
-            تراکنش: "💰",
-            "حضور و غیاب": "📋",
-            "دستیار هوش مصنوعی": "🤖",
+            عضو: <FaUser />,
+            تراکنش: <FaCheckCircle />,
+            "حضور و غیاب": <FaClipboardList />,
+            "دستیار هوش مصنوعی": <FaRobot />,
         };
-        return icons[entityType] || "📄";
+        return icons[entityType] || <FaClipboardList />;
     };
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-black">📊 لاگ فعالیت‌ها</h1>
+                    <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+                        <FaChartBar /> لاگ فعالیت‌ها
+                    </h1>
                     <p className="text-gray-600 mt-2">
                         تمام فعالیت‌های انجام شده در سیستم
                     </p>
@@ -142,7 +145,9 @@ function ActivityLogs() {
 
             {/* Filters */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className="text-lg font-semibold mb-4">🔍 فیلترها</h3>
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <FaSearch /> فیلترها
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                     <select
                         value={filters.action}

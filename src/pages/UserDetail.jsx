@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { 
+  FaArrowLeft, FaEdit, FaLock, FaBan, FaTrash, FaCheck, FaTimes, 
+  FaKey, FaUserTie, FaUsers, FaClipboardList, FaChartBar, FaScroll,
+  FaEnvelope, FaPhone, FaCalendar, FaSync, FaClock, FaCalendarAlt, 
+  FaHistory, FaPlus, FaSignInAlt, FaSignOutAlt, FaEye
+} from 'react-icons/fa';
 import { usersAPI } from '../services/api';
 import { userManager } from '../services/auth';
 import UserForm from '../components/UserForm';
@@ -78,9 +84,9 @@ function UserDetail() {
 
   const getRoleBadge = (role) => {
     const badges = {
-      super_admin: { text: 'مدیر ارشد', icon: '🔑', class: 'super-admin' },
-      admin: { text: 'مدیر', icon: '👤', class: 'admin' },
-      user: { text: 'کاربر', icon: '👥', class: 'user' }
+      super_admin: { text: 'مدیر ارشد', icon: <FaKey />, class: 'super-admin' },
+      admin: { text: 'مدیر', icon: <FaUserTie />, class: 'admin' },
+      user: { text: 'کاربر', icon: <FaUsers />, class: 'user' }
     };
     return badges[role] || badges.user;
   };
@@ -163,7 +169,7 @@ function UserDetail() {
     <div className="user-detail-page">
       {/* دکمه بازگشت */}
       <button onClick={() => navigate('/users')} className="back-button">
-        ← بازگشت به لیست
+        <FaArrowLeft /> بازگشت به لیست
       </button>
 
       {/* هدر */}
@@ -188,7 +194,7 @@ function UserDetail() {
                 {badge.icon} {badge.text}
               </span>
               <span className={`status-badge ${user.is_active ? 'active' : 'inactive'}`}>
-                {user.is_active ? '✓ فعال' : '✕ غیرفعال'}
+                {user.is_active ? <><FaCheck /> فعال</> : <><FaTimes /> غیرفعال</>}
               </span>
             </div>
           </div>
@@ -197,16 +203,16 @@ function UserDetail() {
         {isSuperAdmin && (
           <div className="user-actions">
             <button onClick={() => setShowEditForm(true)} className="btn-action edit">
-              ✏️ ویرایش
+              <FaEdit /> ویرایش
             </button>
             <button onClick={() => setShowPasswordForm(true)} className="btn-action password">
-              🔒 تغییر رمز
+              <FaLock /> تغییر رمز
             </button>
             <button onClick={handleToggleStatus} className="btn-action toggle">
-              {user.is_active ? '🚫 غیرفعال کردن' : '✓ فعال کردن'}
+              {user.is_active ? <><FaBan /> غیرفعال کردن</> : <><FaCheck /> فعال کردن</>}
             </button>
             <button onClick={() => setShowDeleteDialog(true)} className="btn-action delete">
-              🗑️ حذف
+              <FaTrash /> حذف
             </button>
           </div>
         )}
@@ -218,19 +224,19 @@ function UserDetail() {
           className={activeTab === 'info' ? 'active' : ''}
           onClick={() => setActiveTab('info')}
         >
-          📋 اطلاعات
+          <FaClipboardList /> اطلاعات
         </button>
         <button 
           className={activeTab === 'stats' ? 'active' : ''}
           onClick={() => setActiveTab('stats')}
         >
-          📊 آمار
+          <FaChartBar /> آمار
         </button>
         <button 
           className={activeTab === 'activities' ? 'active' : ''}
           onClick={() => setActiveTab('activities')}
         >
-          📜 فعالیت‌ها
+          <FaScroll /> فعالیت‌ها
         </button>
       </div>
 
@@ -240,19 +246,19 @@ function UserDetail() {
         {activeTab === 'info' && (
           <div className="info-grid">
             <div className="info-card">
-              <div className="info-label">📧 ایمیل</div>
+              <div className="info-label"><FaEnvelope /> ایمیل</div>
               <div className="info-value">{user.email}</div>
             </div>
             <div className="info-card">
-              <div className="info-label">📱 شماره تماس</div>
+              <div className="info-label"><FaPhone /> شماره تماس</div>
               <div className="info-value">{user.phone || '-'}</div>
             </div>
             <div className="info-card">
-              <div className="info-label">📅 تاریخ عضویت</div>
+              <div className="info-label"><FaCalendar /> تاریخ عضویت</div>
               <div className="info-value">{formatDate(user.created_at)}</div>
             </div>
             <div className="info-card">
-              <div className="info-label">🔄 آخرین به‌روزرسانی</div>
+              <div className="info-label"><FaSync /> آخرین به‌روزرسانی</div>
               <div className="info-value">{formatDate(user.updated_at)}</div>
             </div>
           </div>
@@ -263,22 +269,22 @@ function UserDetail() {
           <div className="stats-container">
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="stat-icon">📊</div>
+                <div className="stat-icon"><FaChartBar /></div>
                 <div className="stat-value">{stats.totalActivities}</div>
                 <div className="stat-label">کل فعالیت‌ها</div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">🕐</div>
+                <div className="stat-icon"><FaClock /></div>
                 <div className="stat-value">{stats.recentActivities}</div>
                 <div className="stat-label">24 ساعت اخیر</div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">📅</div>
+                <div className="stat-icon"><FaCalendarAlt /></div>
                 <div className="stat-value">{stats.weekActivities}</div>
                 <div className="stat-label">7 روز اخیر</div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">⏰</div>
+                <div className="stat-icon"><FaHistory /></div>
                 <div className="stat-value">{getTimeAgo(stats.lastActivity)}</div>
                 <div className="stat-label">آخرین فعالیت</div>
               </div>
@@ -312,12 +318,12 @@ function UserDetail() {
                 {activities.map((activity) => (
                   <div key={activity.id} className="activity-item">
                     <div className="activity-icon">
-                      {activity.action === 'CREATE' && '➕'}
-                      {activity.action === 'UPDATE' && '✏️'}
-                      {activity.action === 'DELETE' && '🗑️'}
-                      {activity.action === 'LOGIN' && '🔓'}
-                      {activity.action === 'LOGOUT' && '🔒'}
-                      {activity.action === 'VIEW' && '👁️'}
+                      {activity.action === 'CREATE' && <FaPlus />}
+                      {activity.action === 'UPDATE' && <FaEdit />}
+                      {activity.action === 'DELETE' && <FaTrash />}
+                      {activity.action === 'LOGIN' && <FaSignInAlt />}
+                      {activity.action === 'LOGOUT' && <FaSignOutAlt />}
+                      {activity.action === 'VIEW' && <FaEye />}
                     </div>
                     <div className="activity-content">
                       <div className="activity-title">

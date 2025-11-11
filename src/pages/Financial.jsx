@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { FaMoneyBillWave, FaDollarSign, FaChartLine, FaChartBar, FaFileExcel, FaPlus } from "react-icons/fa";
 import StatCard from "../components/StatCard";
 import TransactionForm from "../components/TransactionForm";
 import TransactionFilters from "../components/TransactionFilters";
@@ -245,19 +246,21 @@ function Financial() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-black">💰 مدیریت مالی</h1>
+        <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+          <FaMoneyBillWave /> مدیریت مالی
+        </h1>
         <div className="flex gap-3">
           <button
             onClick={handleExportToExcel}
             className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all flex items-center gap-2"
           >
-            📥 خروجی Excel
+            <FaFileExcel /> خروجی Excel
           </button>
           <button
             onClick={handleAddTransaction}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all"
+            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all flex items-center gap-2"
           >
-            + ثبت تراکنش جدید
+            <FaPlus /> ثبت تراکنش جدید
           </button>
         </div>
       </div>
@@ -266,25 +269,25 @@ function Financial() {
         <StatCard
           title="کل درآمد"
           value={formatCurrency(stats.income)}
-          icon="💵"
+          icon={<FaDollarSign />}
           color="green"
         />
         <StatCard
           title="کل هزینه"
           value={formatCurrency(stats.expense)}
-          icon="💸"
+          icon={<FaMoneyBillWave />}
           color="red"
         />
         <StatCard
           title="سود خالص"
           value={formatCurrency(stats.profit)}
-          icon="📈"
+          icon={<FaChartLine />}
           color={stats.profit >= 0 ? "green" : "red"}
         />
         <StatCard
           title="تعداد تراکنش"
           value={stats.count}
-          icon="📊"
+          icon={<FaChartBar />}
           color="purple"
         />
       </div>
