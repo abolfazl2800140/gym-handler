@@ -1,0 +1,227 @@
+.attendance-modal {
+  max-width: 900px;
+}
+
+.attendance-stats {
+  display: flex;
+  gap: 16px;
+  padding: 16px 24px;
+  background: #f7fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: white;
+}
+
+.stat-present {
+  border: 2px solid #48bb78;
+}
+
+.stat-absent {
+  border: 2px solid #f56565;
+}
+
+.stat-number {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.stat-present .stat-number {
+  color: #48bb78;
+}
+
+.stat-absent .stat-number {
+  color: #f56565;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #718096;
+}
+
+.attendance-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.attendance-search {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.attendance-search:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn-mark-all {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.btn-mark-present {
+  background: #48bb78;
+}
+
+.btn-mark-present:hover {
+  background: #38a169;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.btn-mark-absent {
+  background: #f56565;
+}
+
+.btn-mark-absent:hover {
+  background: #e53e3e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+}
+
+.attendance-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding-right: 4px;
+}
+
+.attendance-item {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+}
+
+.attendance-item:hover {
+  border-color: #cbd5e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.attendance-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.member-info {
+  flex: 1;
+}
+
+.member-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 4px;
+}
+
+.member-phone {
+  font-size: 13px;
+  color: #718096;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.status-btn {
+  padding: 8px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  color: #718096;
+}
+
+.status-btn:hover {
+  border-color: #cbd5e0;
+  background: #f7fafc;
+}
+
+.status-btn-present.active {
+  background: #48bb78;
+  border-color: #48bb78;
+  color: white;
+}
+
+.status-btn-absent.active {
+  background: #f56565;
+  border-color: #f56565;
+  color: white;
+}
+
+.status-btn-leave.active {
+  background: #ecc94b;
+  border-color: #ecc94b;
+  color: white;
+}
+
+.reason-input-wrapper {
+  margin-top: 12px;
+}
+
+.reason-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.reason-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .attendance-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .status-btn {
+    flex: 1;
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  .attendance-toolbar {
+    flex-direction: column;
+  }
+
+  .btn-mark-all {
+    width: 100%;
+  }
+}

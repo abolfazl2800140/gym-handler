@@ -215,6 +215,10 @@ function MemberProfile() {
               <div className="info-value">{member.phone}</div>
             </div>
             <div className="info-card">
+              <div className="info-label"><FaUser /> جنسیت</div>
+              <div className="info-value">{member.gender || 'مرد'}</div>
+            </div>
+            <div className="info-card">
               <div className="info-label"><FaBirthdayCake /> تاریخ تولد</div>
               <div className="info-value">{formatDate(member.birthDate)}</div>
             </div>

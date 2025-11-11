@@ -21,7 +21,7 @@ function SearchBar({
       <select
         value={memberTypeFilter}
         onChange={(e) => onMemberTypeChange(e.target.value)}
-        className="px-4 py-2 rounded-lg bg-white/10 backdrop-blur-lg text-black border border-white/20 focus:outline-none focus:border-white/40"
+        className="px-4 py-2 rounded-lg bg-white text-black border border-gray-500 focus:outline-none focus:border-gray-800"
       >
         <option value="">همه انواع</option>
         <option value="مربی">مربی</option>
@@ -32,7 +32,7 @@ function SearchBar({
       <select
         value={statusFilter}
         onChange={(e) => onStatusChange(e.target.value)}
-        className="px-4 py-2 rounded-lg text-black border border-white/20 focus:outline-none focus:border-white/40"
+        className="px-4 py-2 rounded-lg bg-white text-black border border-gray-500 focus:outline-none focus:border-gray-800"
       >
         <option value="">همه وضعیت‌ها</option>
         <option value="فعال">فعال</option>

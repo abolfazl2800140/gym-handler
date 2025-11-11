@@ -16,7 +16,9 @@ exports.getAllUsers = async (req, res) => {
       // Super Admin می‌تونه همه رو ببینه (به جز خودش)
       query = `
         SELECT id, username, email, first_name, last_name, phone, 
-               avatar_url, role, is_active, created_at, updated_at
+               avatar_url, role, 
+               COALESCE(gender, 'مرد') as gender,
+               is_active, created_at, updated_at
         FROM users
         WHERE id != $1
         ORDER BY created_at DESC
@@ -26,7 +28,9 @@ exports.getAllUsers = async (req, res) => {
       // Admin فقط خودش رو می‌بینه
       query = `
         SELECT id, username, email, first_name, last_name, phone, 
-               avatar_url, role, is_active, created_at, updated_at
+               avatar_url, role,
+               COALESCE(gender, 'مرد') as gender,
+               is_active, created_at, updated_at
         FROM users
         WHERE id = $1
       `;
@@ -67,7 +71,9 @@ exports.getUserById = async (req, res) => {
 
     const result = await db.query(
       `SELECT id, username, email, first_name, last_name, phone, 
-              avatar_url, role, is_active, created_at, updated_at
+              avatar_url, role, 
+              COALESCE(gender, 'مرد') as gender,
+              is_active, created_at, updated_at
        FROM users
        WHERE id = $1`,
       [id]
@@ -125,11 +131,12 @@ exports.createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // اضافه کردن کاربر
+    const { gender } = req.body;
     const result = await db.query(
-      `INSERT INTO users (username, email, password, first_name, last_name, phone, role)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING id, username, email, first_name, last_name, phone, role, created_at`,
-      [username, email, hashedPassword, first_name, last_name, phone, role || 'admin']
+      `INSERT INTO users (username, email, password, first_name, last_name, phone, role, gender)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       RETURNING id, username, email, first_name, last_name, phone, role, gender, created_at`,
+      [username, email, hashedPassword, first_name, last_name, phone, role || 'admin', gender || 'مرد']
     );
 
     res.status(201).json({
@@ -153,7 +160,7 @@ exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const currentUser = req.user;
-    const { username, email, first_name, last_name, phone, role, avatar_url } = req.body;
+    const { username, email, first_name, last_name, phone, role, avatar_url, gender } = req.body;
 
     // بررسی دسترسی
     if (currentUser.role !== 'super_admin' && currentUser.id !== parseInt(id)) {
@@ -205,10 +212,11 @@ exports.updateUser = async (req, res) => {
            phone = COALESCE($5, phone),
            role = COALESCE($6, role),
            avatar_url = COALESCE($7, avatar_url),
+           gender = COALESCE($8, gender),
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $8
-       RETURNING id, username, email, first_name, last_name, phone, role, avatar_url, updated_at`,
-      [username, email, first_name, last_name, phone, role, avatar_url, id]
+       WHERE id = $9
+       RETURNING id, username, email, first_name, last_name, phone, role, avatar_url, gender, updated_at`,
+      [username, email, first_name, last_name, phone, role, avatar_url, gender, id]
     );
 
     res.json({
