@@ -93,6 +93,8 @@ exports.saveAttendance = async (req, res) => {
   try {
     const { date, records, notes } = req.body;
 
+    console.log('Received attendance data:', { date, records, notes });
+
     // Validation
     if (!date || !records) {
       return res.status(400).json({ 

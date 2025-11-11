@@ -3,6 +3,7 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { pdf } from "@react-pdf/renderer";
 import * as XLSX from "xlsx";
+import { FaChartBar, FaUsers, FaCheckCircle, FaDollarSign, FaMoneyBillWave, FaFilePdf, FaFileExcel, FaPrint, FaChartLine } from "react-icons/fa";
 import StatCard from "../components/StatCard";
 import ReportPDF from "../components/ReportPDF";
 import DateRangeFilter from "../components/DateRangeFilter";
@@ -561,25 +562,27 @@ function Reports() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-black">📊 گزارشات پیشرفته</h1>
+        <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+          <FaChartBar /> گزارشات پیشرفته
+        </h1>
         <div className="flex gap-3">
           <button
             onClick={handleExportPDF}
             className="px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-all flex items-center gap-2"
           >
-            📄 PDF نمودارها
+            <FaFilePdf /> PDF نمودارها
           </button>
           <button
             onClick={handleExportExcel}
             className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all flex items-center gap-2"
           >
-            📊 Excel کامل
+            <FaFileExcel /> Excel کامل
           </button>
           <button
             onClick={handlePrint}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all flex items-center gap-2"
           >
-            🖨️ چاپ
+            <FaPrint /> چاپ
           </button>
         </div>
       </div>
@@ -590,25 +593,25 @@ function Reports() {
         <StatCard
           title="تعداد کل اعضا"
           value={members.length}
-          icon="👥"
+          icon={<FaUsers />}
           color="blue"
         />
         <StatCard
           title="اعضای فعال"
           value={activeMembers}
-          icon="✅"
+          icon={<FaCheckCircle />}
           color="green"
         />
         <StatCard
           title="درآمد دوره انتخابی"
           value={formatCurrency(currentIncome)}
-          icon="💵"
+          icon={<FaDollarSign />}
           color="green"
         />
         <StatCard
           title="هزینه دوره انتخابی"
           value={formatCurrency(currentExpense)}
-          icon="💸"
+          icon={<FaMoneyBillWave />}
           color="red"
         />
       </div>
@@ -616,8 +619,8 @@ function Reports() {
       <div className="grid grid-cols-2 gap-6 mb-6">
         <AdvancedStats stats={calculateAdvancedStats()} />
         <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-lg">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
-            📈 مقایسه با ماه قبل
+          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <FaChartLine /> مقایسه با ماه قبل
           </h3>
           <div className="space-y-4">
             <div className="flex justify-between items-center p-4 bg-white rounded-lg">
@@ -648,14 +651,14 @@ function Reports() {
       <div className="grid grid-cols-1 gap-6 mb-6">
         <TrendChart
           data={getTrendData()}
-          title="📈 روند درآمد و هزینه در طول سال"
+          title="روند درآمد و هزینه در طول سال"
         />
       </div>
 
       <div className="grid grid-cols-1 gap-6 mb-6">
         <ComparisonChart
           data={getComparisonData()}
-          title="📊 مقایسه درآمد سال جاری با سال قبل"
+          title="مقایسه درآمد سال جاری با سال قبل"
         />
       </div>
 

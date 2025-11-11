@@ -140,6 +140,13 @@
   font-size: 14px;
   transition: all 0.3s ease;
   font-family: inherit;
+  color: #2d3748;
+  background: white;
+}
+
+.form-group select option {
+  color: #2d3748;
+  background: white;
 }
 
 .form-group input:focus,

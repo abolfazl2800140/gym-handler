@@ -1,3 +1,5 @@
+import { FaChartLine, FaArrowUp, FaArrowDown } from "react-icons/fa";
+
 function AdvancedStats({ stats }) {
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("fa-IR").format(amount) + " تومان";
@@ -9,7 +11,9 @@ function AdvancedStats({ stats }) {
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg">
-      <h3 className="text-lg font-bold text-gray-800 mb-4">📈 آمار پیشرفته</h3>
+      <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <FaChartLine /> آمار پیشرفته
+      </h3>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="p-4 bg-blue-50 rounded-lg">
@@ -52,11 +56,11 @@ function AdvancedStats({ stats }) {
         <div className="p-4 bg-pink-50 rounded-lg">
           <div className="text-sm text-gray-600 mb-1">روند رشد (ماه جاری)</div>
           <div
-            className={`text-xl font-bold ${
+            className={`text-xl font-bold flex items-center gap-1 ${
               stats.growthRate >= 0 ? "text-green-600" : "text-red-600"
             }`}
           >
-            {stats.growthRate >= 0 ? "↗" : "↘"}{" "}
+            {stats.growthRate >= 0 ? <FaArrowUp /> : <FaArrowDown />}{" "}
             {formatPercent(Math.abs(stats.growthRate))}
           </div>
         </div>

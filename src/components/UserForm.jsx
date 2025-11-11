@@ -11,7 +11,8 @@ function UserForm({ user, onClose, onSuccess }) {
     first_name: '',
     last_name: '',
     phone: '',
-    role: 'admin'
+    role: 'admin',
+    gender: 'مرد'
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -28,7 +29,8 @@ function UserForm({ user, onClose, onSuccess }) {
         first_name: user.first_name || '',
         last_name: user.last_name || '',
         phone: user.phone || '',
-        role: user.role || 'admin'
+        role: user.role || 'admin',
+        gender: user.gender || 'مرد'
       });
     }
   }, [user]);
@@ -175,22 +177,36 @@ function UserForm({ user, onClose, onSuccess }) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="role">نقش</label>
+              <label htmlFor="gender">جنسیت *</label>
               <select
-                id="role"
-                name="role"
-                value={formData.role}
+                id="gender"
+                name="gender"
+                value={formData.gender}
                 onChange={handleChange}
-                disabled={!isSuperAdmin}
+                required
               >
-                <option value="admin">مدیر</option>
-                <option value="super_admin">مدیر ارشد</option>
-                <option value="user">کاربر</option>
+                <option value="مرد">مرد</option>
+                <option value="زن">زن</option>
               </select>
-              {!isSuperAdmin && (
-                <small className="form-hint">فقط مدیر ارشد می‌تواند نقش را تغییر دهد</small>
-              )}
             </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="role">نقش</label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              disabled={!isSuperAdmin}
+            >
+              <option value="admin">مدیر</option>
+              <option value="super_admin">مدیر ارشد</option>
+              <option value="user">کاربر</option>
+            </select>
+            {!isSuperAdmin && (
+              <small className="form-hint">فقط مدیر ارشد می‌تواند نقش را تغییر دهد</small>
+            )}
           </div>
 
           <div className="form-actions">

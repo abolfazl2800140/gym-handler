@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { FaClipboardList, FaCheck, FaTimes, FaCalendarAlt, FaChartBar, FaPlus, FaClipboardCheck } from "react-icons/fa";
 import StatCard from "../components/StatCard";
 import AttendanceForm from "../components/AttendanceForm";
 import AttendanceHistory from "../components/AttendanceHistory";
@@ -189,7 +190,9 @@ function Attendance() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-black">📋 حضور و غیاب</h1>
+        <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+          <FaClipboardList /> حضور و غیاب
+        </h1>
         <div className="flex gap-3">
           <SimplePersianDatePicker
             value={selectedDate}
@@ -198,9 +201,9 @@ function Attendance() {
           />
           <button
             onClick={() => handleOpenForm(selectedDate)}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all"
+            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all flex items-center gap-2"
           >
-            + ثبت حضور و غیاب
+            <FaPlus /> ثبت حضور و غیاب
           </button>
         </div>
       </div>
@@ -209,28 +212,28 @@ function Attendance() {
         <StatCard
           title="حاضر امروز"
           value={todayStats.present}
-          icon="✓"
+          icon={<FaCheck />}
           color="green"
           subtitle={`از ${todayStats.total} نفر`}
         />
         <StatCard
           title="غایب امروز"
           value={todayStats.absent}
-          icon="✗"
+          icon={<FaTimes />}
           color="red"
           subtitle={`از ${todayStats.total} نفر`}
         />
         <StatCard
           title="مرخصی امروز"
           value={todayStats.leave}
-          icon="📅"
+          icon={<FaCalendarAlt />}
           color="purple"
           subtitle={`از ${todayStats.total} نفر`}
         />
         <StatCard
           title="درصد حضور امروز"
           value={`${todayStats.percentage}%`}
-          icon="📊"
+          icon={<FaChartBar />}
           color="blue"
         />
       </div>
@@ -349,15 +352,15 @@ function Attendance() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="text-gray-400 text-6xl mb-4">📋</div>
+              <div className="text-gray-400 text-6xl mb-4"><FaClipboardCheck className="inline" /></div>
               <p className="text-gray-600 mb-4">
                 هنوز حضور و غیاب امروز ثبت نشده است
               </p>
               <button
                 onClick={() => handleOpenForm()}
-                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 mx-auto"
               >
-                ثبت حضور و غیاب امروز
+                <FaPlus /> ثبت حضور و غیاب امروز
               </button>
             </div>
           )}
@@ -367,8 +370,8 @@ function Attendance() {
       {activeTab === "history" && (
         <div>
           <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">
-              🗓️ فیلتر بازه زمانی
+            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <FaCalendarAlt /> فیلتر بازه زمانی
             </h3>
             <div className="flex gap-4">
               <div className="flex-1">
@@ -423,25 +426,25 @@ function Attendance() {
             <StatCard
               title="کل حاضر"
               value={overallStats.present}
-              icon="✓"
+              icon={<FaCheck />}
               color="green"
             />
             <StatCard
               title="کل غایب"
               value={overallStats.absent}
-              icon="✗"
+              icon={<FaTimes />}
               color="red"
             />
             <StatCard
               title="کل مرخصی"
               value={overallStats.leave}
-              icon="📅"
+              icon={<FaCalendarAlt />}
               color="purple"
             />
             <StatCard
               title="میانگین حضور"
               value={`${overallStats.percentage}%`}
-              icon="📊"
+              icon={<FaChartBar />}
               color="blue"
             />
           </div>

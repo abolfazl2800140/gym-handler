@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaKey, FaUserTie, FaUsers, FaEdit, FaLock, FaTrash, FaPlus } from 'react-icons/fa';
 import { usersAPI } from '../services/api';
 import { userManager } from '../services/auth';
 import UserForm from '../components/UserForm';
@@ -83,9 +84,9 @@ function Users() {
 
   const getRoleBadge = (role) => {
     const badges = {
-      super_admin: { text: 'مدیر ارشد', icon: '🔑', class: 'super-admin' },
-      admin: { text: 'مدیر', icon: '👤', class: 'admin' },
-      user: { text: 'کاربر', icon: '👥', class: 'user' }
+      super_admin: { text: 'مدیر ارشد', icon: <FaKey />, class: 'super-admin' },
+      admin: { text: 'مدیر', icon: <FaUserTie />, class: 'admin' },
+      user: { text: 'کاربر', icon: <FaUsers />, class: 'user' }
     };
     return badges[role] || badges.user;
   };
@@ -114,7 +115,7 @@ function Users() {
         </div>
         {isSuperAdmin && (
           <button onClick={handleAddUser} className="btn-primary">
-            <span>➕</span>
+            <FaPlus />
             افزودن ادمین
           </button>
         )}
@@ -170,7 +171,7 @@ function Users() {
                   className="btn-edit"
                   title="ویرایش"
                 >
-                  ✏️ ویرایش
+                  <FaEdit /> ویرایش
                 </button>
                 <button 
                   onClick={(e) => {
@@ -180,7 +181,7 @@ function Users() {
                   className="btn-password"
                   title="تغییر رمز عبور"
                 >
-                  🔒 رمز عبور
+                  <FaLock /> رمز عبور
                 </button>
                 {isSuperAdmin && !isCurrentUser && (
                   <button 
@@ -191,7 +192,7 @@ function Users() {
                     className="btn-delete"
                     title="حذف"
                   >
-                    🗑️ حذف
+                    <FaTrash /> حذف
                   </button>
                 )}
               </div>

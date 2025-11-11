@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaUsers, FaTable, FaTh, FaPlus, FaEdit, FaTrash, FaUser, FaPhone, FaTag, FaStar, FaCalendar, FaCheck, FaSearch } from "react-icons/fa";
 import MemberAvatar from "../components/MemberAvatar";
 import MemberBadge from "../components/MemberBadge";
 import SearchBar from "../components/SearchBar";
@@ -14,13 +15,17 @@ function Members() {
   const [searchTerm, setSearchTerm] = useState("");
   const [memberTypeFilter, setMemberTypeFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [viewMode, setViewMode] = useState("table"); // "table" or "card"
+  const [viewMode, setViewMode] = useState("table");
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deletingMemberId, setDeletingMemberId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [sortField, setSortField] = useState(null);
+  const [sortDirection, setSortDirection] = useState('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   useEffect(() => {
     fetchMembers();
@@ -35,7 +40,6 @@ function Members() {
     } catch (err) {
       console.error('Error fetching members:', err);
       setError('خطا در دریافت اطلاعات اعضا');
-      // Fallback to localStorage
       const savedMembers = localStorage.getItem("members");
       if (savedMembers) {
         setMembers(JSON.parse(savedMembers));
@@ -45,26 +49,93 @@ function Members() {
     }
   };
 
-  const filteredMembers = members.filter((member) => {
-    const matchesSearch =
-      member.first_name?.includes(searchTerm) ||
-      member.last_name?.includes(searchTerm) ||
-      member.phone?.includes(searchTerm) ||
-      member.firstName?.includes(searchTerm) ||
-      member.lastName?.includes(searchTerm);
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
 
-    const matchesType =
-      !memberTypeFilter ||
-      member.member_type === memberTypeFilter ||
-      member.memberType === memberTypeFilter;
+  const getSortIcon = (field) => {
+    if (sortField !== field) {
+      return (
+        <svg className="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+        </svg>
+      );
+    }
+    return sortDirection === 'asc' ? (
+      <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+      </svg>
+    ) : (
+      <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    );
+  };
 
-    const matchesStatus =
-      !statusFilter ||
-      member.subscription_status === statusFilter ||
-      member.subscriptionStatus === statusFilter;
+  const filteredAndSortedMembers = members
+    .filter((member) => {
+      const matchesSearch =
+        member.first_name?.includes(searchTerm) ||
+        member.last_name?.includes(searchTerm) ||
+        member.phone?.includes(searchTerm) ||
+        member.firstName?.includes(searchTerm) ||
+        member.lastName?.includes(searchTerm);
 
-    return matchesSearch && matchesType && matchesStatus;
-  });
+      const matchesType =
+        !memberTypeFilter ||
+        member.member_type === memberTypeFilter ||
+        member.memberType === memberTypeFilter;
+
+      const matchesStatus =
+        !statusFilter ||
+        member.subscription_status === statusFilter ||
+        member.subscriptionStatus === statusFilter;
+
+      return matchesSearch && matchesType && matchesStatus;
+    })
+    .sort((a, b) => {
+      if (!sortField) return 0;
+
+      let aValue, bValue;
+
+      switch (sortField) {
+        case 'name':
+          aValue = `${a.firstName || a.first_name} ${a.lastName || a.last_name}`.toLowerCase();
+          bValue = `${b.firstName || b.first_name} ${b.lastName || b.last_name}`.toLowerCase();
+          break;
+        case 'phone':
+          aValue = a.phone || '';
+          bValue = b.phone || '';
+          break;
+        case 'memberType':
+          aValue = a.memberType || a.member_type || '';
+          bValue = b.memberType || b.member_type || '';
+          break;
+        case 'membershipLevel':
+          aValue = a.membershipLevel || a.membership_level || '';
+          bValue = b.membershipLevel || b.membership_level || '';
+          break;
+        case 'joinDate':
+          aValue = new Date(a.joinDate || a.join_date);
+          bValue = new Date(b.joinDate || b.join_date);
+          break;
+        case 'status':
+          aValue = a.subscriptionStatus || a.subscription_status || '';
+          bValue = b.subscriptionStatus || b.subscription_status || '';
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
 
   const handleAddMember = () => {
     setEditingMember(null);
@@ -124,12 +195,29 @@ function Members() {
     setDeletingMemberId(null);
   };
 
+  // Pagination
+  const totalPages = Math.ceil(filteredAndSortedMembers.length / itemsPerPage);
+  const paginatedMembers = filteredAndSortedMembers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, memberTypeFilter, statusFilter, sortField, sortDirection]);
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">👥 مدیریت اعضا</h1>
+        <h1 className="text-3xl font-bold flex items-center gap-2">
+          <FaUsers /> مدیریت اعضا
+        </h1>
         <div className="flex gap-3">
-          {/* Toggle نمای جدولی/کارتی */}
           <div className="flex bg-white/10 backdrop-blur-lg rounded-lg p-1">
             <button
               onClick={() => setViewMode("table")}
@@ -140,20 +228,7 @@ function Members() {
               }`}
               title="نمای جدولی"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5"
-                />
-              </svg>
+              <FaTable />
             </button>
             <button
               onClick={() => setViewMode("card")}
@@ -164,29 +239,17 @@ function Members() {
               }`}
               title="نمای کارتی"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
-                />
-              </svg>
+              <FaTh />
             </button>
           </div>
           
           <button
             onClick={handleAddMember}
             disabled={loading}
-            className="px-6 py-3 bg-white text-indigo-600 rounded-lg font-medium hover:bg-white/90 transition-all disabled:opacity-50"
+            className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold transition-all disabled:opacity-50 flex items-center gap-2 hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(72,187,120,0.3)]"
           >
-            + افزودن عضو جدید
+            <FaPlus />
+            افزودن عضو جدید
           </button>
         </div>
       </div>
@@ -212,112 +275,212 @@ function Members() {
         onStatusChange={setStatusFilter}
       />
 
-      {/* نمای جدولی */}
       {viewMode === "table" && (
-        <div className="bg-white/10 backdrop-blur-lg rounded-xl overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-white/5">
-            <tr>
-              <th className="px-6 py-4 text-black text-right text-sm font-medium">عضو</th>
-              <th className="px-6 py-4 text-black text-right text-sm font-medium">
-                شماره تماس
-              </th>
-              <th className="px-6 py-4 text-black text-right text-sm font-medium">
-                نوع عضویت
-              </th>
-              <th className="px-6 py-4 text-black text-right text-sm font-medium">
-                سطح عضویت
-              </th>
-              <th className="px-6 py-4 text-black text-right text-sm font-medium">
-                تاریخ عضویت
-              </th>
-              <th className="px-6 py-4 text-black text-right text-sm font-medium">
-                وضعیت
-              </th>
-              <th className="px-6 py-4 text-black text-right text-sm font-medium">
-                عملیات
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/10">
-            {filteredMembers.map((member) => (
-              <tr
-                key={member.id}
-                className="hover:bg-white/5 transition-colors cursor-pointer"
-                onClick={() => navigate(`/members/${member.id}`)}
-              >
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <MemberAvatar
-                      firstName={member.firstName}
-                      lastName={member.lastName}
-                    />
-                    <span className="font-medium text-black">
-                      {member.firstName} {member.lastName}
-                    </span>
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col" style={{ height: 'calc(100vh - 200px)' }}>
+          {/* جدول با header ثابت */}
+          <div className="overflow-auto flex-1">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200 sticky top-0 z-10">
+              <tr>
+                <th 
+                  className="px-6 py-4 text-gray-700 text-right text-sm font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
+                  onClick={() => handleSort('name')}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-2"><FaUser /> عضو</span>
+                    {getSortIcon('name')}
                   </div>
-                </td>
-                <td className="px-6 py-4 text-black">{member.phone}</td>
-                <td className="px-6 py-4">
-                  <MemberBadge type={member.memberType} variant="type" />
-                </td>
-                <td className="px-6 py-4">
-                  <MemberBadge type={member.membershipLevel} variant="level" />
-                </td>
-                <td className="px-6 py-4 text-black">
-                  {new Date(member.joinDate).toLocaleDateString("fa-IR")}
-                </td>
-                <td className="px-6 py-4">
-                  <MemberBadge
-                    type={member.subscriptionStatus}
-                    variant="status"
-                  />
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditMember(member);
-                      }}
-                      className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
-                    >
-                      ویرایش
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteClick(member.id);
-                      }}
-                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
-                    >
-                      حذف
-                    </button>
+                </th>
+                <th 
+                  className="px-6 py-4 text-gray-700 text-right text-sm font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
+                  onClick={() => handleSort('phone')}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-2"><FaPhone /> شماره تماس</span>
+                    {getSortIcon('phone')}
                   </div>
-                </td>
+                </th>
+                <th 
+                  className="px-6 py-4 text-gray-700 text-right text-sm font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
+                  onClick={() => handleSort('memberType')}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-2"><FaTag /> نوع عضویت</span>
+                    {getSortIcon('memberType')}
+                  </div>
+                </th>
+                <th 
+                  className="px-6 py-4 text-gray-700 text-right text-sm font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
+                  onClick={() => handleSort('membershipLevel')}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-2"><FaStar /> سطح عضویت</span>
+                    {getSortIcon('membershipLevel')}
+                  </div>
+                </th>
+                <th 
+                  className="px-6 py-4 text-gray-700 text-right text-sm font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
+                  onClick={() => handleSort('joinDate')}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-2"><FaCalendar /> تاریخ عضویت</span>
+                    {getSortIcon('joinDate')}
+                  </div>
+                </th>
+                <th 
+                  className="px-6 py-4 text-gray-700 text-right text-sm font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
+                  onClick={() => handleSort('status')}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-2"><FaCheck /> وضعیت</span>
+                    {getSortIcon('status')}
+                  </div>
+                </th>
+                <th className="px-6 py-4 text-gray-700 text-center text-sm font-semibold">
+                  عملیات
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {paginatedMembers.map((member, index) => (
+                <tr
+                  key={member.id}
+                  className={`transition-all cursor-pointer ${
+                    index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                  } hover:bg-blue-50 hover:shadow-md`}
+                  onClick={() => navigate(`/members/${member.id}`)}
+                >
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <MemberAvatar
+                        firstName={member.firstName}
+                        lastName={member.lastName}
+                      />
+                      <span className="font-semibold text-gray-800">
+                        {member.firstName} {member.lastName}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="text-gray-700 font-medium direction-ltr inline-block">
+                      {member.phone}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <MemberBadge type={member.memberType} variant="type" />
+                  </td>
+                  <td className="px-6 py-4">
+                    <MemberBadge type={member.membershipLevel} variant="level" />
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="text-gray-700 font-medium">
+                      {new Date(member.joinDate).toLocaleDateString("fa-IR")}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <MemberBadge
+                      type={member.subscriptionStatus}
+                      variant="status"
+                    />
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex gap-2 justify-center">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditMember(member);
+                        }}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition-all hover:shadow-lg"
+                        title="ویرایش عضو"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteClick(member.id);
+                        }}
+                        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium transition-all hover:shadow-lg"
+                        title="حذف عضو"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-        {filteredMembers.length === 0 && (
-          <div className="text-center py-12 text-white/60">
-            هیچ عضوی یافت نشد
+          {filteredAndSortedMembers.length === 0 && (
+            <div className="text-center py-16 bg-gray-50">
+              <div className="text-6xl mb-4"><FaSearch className="inline text-gray-300" /></div>
+              <p className="text-gray-600 text-lg font-medium">هیچ عضوی یافت نشد</p>
+              <p className="text-gray-400 text-sm mt-2">لطفاً فیلترها را تغییر دهید یا عضو جدیدی اضافه کنید</p>
+            </div>
+          )}
           </div>
-        )}
+
+          {/* Pagination داخل جدول */}
+          {filteredAndSortedMembers.length > 0 && (
+            <div className="flex justify-start items-center gap-2 p-4 bg-gray-50 border-t border-gray-200">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            قبلی
+          </button>
+          
+          <div className="flex gap-1">
+            {[...Array(totalPages)].map((_, index) => {
+              const page = index + 1;
+              if (
+                page === 1 ||
+                page === totalPages ||
+                (page >= currentPage - 1 && page <= currentPage + 1)
+              ) {
+                return (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      currentPage === page
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                );
+              } else if (page === currentPage - 2 || page === currentPage + 2) {
+                return <span key={page} className="px-2 py-2 text-gray-400">...</span>;
+              }
+              return null;
+            })}
+          </div>
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            بعدی
+          </button>
+            </div>
+          )}
         </div>
       )}
 
-      {/* نمای کارتی */}
       {viewMode === "card" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredMembers.map((member) => (
+        <div className="overflow-auto" style={{ height: 'calc(100vh - 160px)' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
+            {filteredAndSortedMembers.map((member) => (
             <div
               key={member.id}
               onClick={() => navigate(`/members/${member.id}`)}
               className="member-card rounded-xl p-6 cursor-pointer group"
             >
-              {/* هدر کارت */}
               <div className="member-card-header flex items-center gap-4 mb-4">
                 <MemberAvatar
                   firstName={member.firstName}
@@ -332,14 +495,12 @@ function Members() {
                 </div>
               </div>
 
-              {/* Badge ها */}
               <div className="flex flex-wrap gap-2 mb-4">
                 <MemberBadge type={member.memberType} variant="type" />
                 <MemberBadge type={member.membershipLevel} variant="level" />
                 <MemberBadge type={member.subscriptionStatus} variant="status" />
               </div>
 
-              {/* اطلاعات */}
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">تاریخ عضویت:</span>
@@ -349,35 +510,37 @@ function Members() {
                 </div>
               </div>
 
-              {/* دکمه‌ها */}
               <div className="flex gap-2 pt-4 border-t border-gray-200">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleEditMember(member);
                   }}
-                  className="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition-colors"
+                  className="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition-colors flex items-center justify-center gap-2"
                 >
-                  ✏️ ویرایش
+                  <FaEdit /> ویرایش
                 </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDeleteClick(member.id);
                   }}
-                  className="flex-1 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium transition-colors"
+                  className="flex-1 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium transition-colors flex items-center justify-center gap-2"
                 >
-                  🗑️ حذف
+                  <FaTrash /> حذف
                 </button>
               </div>
             </div>
           ))}
 
-          {filteredMembers.length === 0 && (
-            <div className="col-span-full text-center py-12 text-white/60">
-              هیچ عضوی یافت نشد
+          {filteredAndSortedMembers.length === 0 && (
+            <div className="col-span-full text-center py-16 bg-white rounded-xl">
+              <div className="text-6xl mb-4"><FaSearch className="inline text-gray-300" /></div>
+              <p className="text-gray-600 text-lg font-medium">هیچ عضوی یافت نشد</p>
+              <p className="text-gray-400 text-sm mt-2">لطفاً فیلترها را تغییر دهید یا عضو جدیدی اضافه کنید</p>
             </div>
           )}
+          </div>
         </div>
       )}
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { FaRobot, FaLightbulb, FaPaperPlane } from "react-icons/fa";
 import { aiAPI } from "../services/api";
 
 function AIAssistant() {
@@ -86,7 +87,9 @@ function AIAssistant() {
     return (
         <div className="h-[calc(100vh-100px)] flex flex-col">
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-black">🤖 دستیار هوشمند</h1>
+                <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+                    <FaRobot /> دستیار هوشمند
+                </h1>
                 <p className="text-gray-600 mt-2">
                     از هوش مصنوعی درباره باشگاه خود سوال بپرسید
                 </p>
@@ -95,8 +98,8 @@ function AIAssistant() {
             {/* Suggestions */}
             {messages.length === 1 && (
                 <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">
-                        💡 سوالات پیشنهادی:
+                    <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                        <FaLightbulb /> سوالات پیشنهادی:
                     </h3>
                     <div className="flex flex-wrap gap-2">
                         {suggestions.map((suggestion, index) => (
@@ -183,9 +186,9 @@ function AIAssistant() {
                         <button
                             type="submit"
                             disabled={loading || !inputValue.trim()}
-                            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
-                            {loading ? "..." : "ارسال"}
+                            {loading ? "..." : <><FaPaperPlane /> ارسال</>}
                         </button>
                     </div>
                 </form>

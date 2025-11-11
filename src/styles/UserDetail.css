@@ -1,7 +1,5 @@
 .user-detail-page {
-  padding: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .back-button {
@@ -42,7 +40,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +48,7 @@
   font-weight: 700;
   color: white;
   flex-shrink: 0;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 24px rgba(237, 137, 54, 0.3);
 }
 
 .user-avatar-xl img {
@@ -206,7 +204,7 @@
 }
 
 .tabs button.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
   color: white;
 }
 
@@ -267,18 +265,18 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
   border-radius: 16px;
   padding: 24px;
   text-align: center;
   color: white;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 24px rgba(72, 187, 120, 0.3);
   transition: all 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 32px rgba(72, 187, 120, 0.4);
 }
 
 .stat-icon {
@@ -335,7 +333,7 @@
 .action-count {
   font-size: 16px;
   font-weight: 700;
-  color: #667eea;
+  color: #4299e1;
 }
 
 /* تب فعالیت‌ها */
@@ -418,10 +416,6 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .user-detail-page {
-    padding: 20px;
-  }
-
   .user-header-content {
     flex-direction: column;
     text-align: center;

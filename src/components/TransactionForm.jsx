@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import PersianDatePicker from "./PersianDatePicker";
 import { membersAPI } from "../services/api";
+import '../styles/UserForm.css';
 
 function TransactionForm({ transaction, onSave, onCancel }) {
   const [formData, setFormData] = useState({
@@ -61,83 +62,94 @@ function TransactionForm({ transaction, onSave, onCancel }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white/10 backdrop-blur-lg rounded-xl p-8 max-w-2xl w-full mx-4 border border-white/20 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-6 text-white">
-          {transaction ? "ویرایش تراکنش" : "ثبت تراکنش جدید"}
-        </h2>
+    <div className="modal-overlay" onClick={onCancel}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>{transaction ? "ویرایش تراکنش" : "ثبت تراکنش جدید"}</h2>
+          <button onClick={onCancel} className="close-button">✕</button>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-white mb-2 text-sm">نوع *</label>
+        <form onSubmit={handleSubmit} className="user-form">
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="type">نوع *</label>
               <select
+                id="type"
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:border-white/40"
               >
                 <option value="درآمد">درآمد</option>
                 <option value="هزینه">هزینه</option>
               </select>
             </div>
 
-            <div>
-              <label className="block text-white mb-2 text-sm">
-                مبلغ (تومان) *
-              </label>
+            <div className="form-group">
+              <label htmlFor="amount">مبلغ (تومان) *</label>
               <input
                 type="number"
+                id="amount"
                 name="amount"
                 value={formData.amount}
                 onChange={handleChange}
                 required
                 min="0"
-                className="w-full px-4 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:border-white/40"
+                placeholder="مبلغ"
               />
               {formData.amount && (
-                <div className="mt-2 text-sm text-white/80">
+                <small className="form-hint">
                   {new Intl.NumberFormat("fa-IR").format(formData.amount)} تومان
-                </div>
+                </small>
               )}
             </div>
           </div>
 
-          <div>
-            <label className="block text-white mb-2 text-sm">عنوان *</label>
+          <div className="form-group">
+            <label htmlFor="title">عنوان *</label>
             <input
               type="text"
+              id="title"
               name="title"
               value={formData.title}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:border-white/40"
+              placeholder="عنوان تراکنش"
             />
           </div>
 
-          <div>
-            <label className="block text-white mb-2 text-sm">توضیحات</label>
+          <div className="form-group">
+            <label htmlFor="description">توضیحات</label>
             <textarea
+              id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
               rows="3"
-              className="w-full px-4 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:border-white/40"
+              placeholder="توضیحات تراکنش"
+              style={{ 
+                padding: '12px 16px',
+                border: '2px solid #e2e8f0',
+                borderRadius: '10px',
+                fontSize: '14px',
+                transition: 'all 0.3s ease',
+                fontFamily: 'inherit',
+                resize: 'vertical',
+                color: '#2d3748',
+                background: 'white'
+              }}
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-white mb-2 text-sm">
-                دسته‌بندی *
-              </label>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="category">دسته‌بندی *</label>
               <select
+                id="category"
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:border-white/40"
               >
                 <option value="شهریه">شهریه</option>
                 <option value="تجهیزات">تجهیزات</option>
@@ -146,7 +158,7 @@ function TransactionForm({ transaction, onSave, onCancel }) {
               </select>
             </div>
 
-            <div>
+            <div className="form-group">
               <PersianDatePicker
                 label="تاریخ"
                 required
@@ -156,15 +168,13 @@ function TransactionForm({ transaction, onSave, onCancel }) {
             </div>
           </div>
 
-          <div>
-            <label className="block text-white mb-2 text-sm">
-              عضو مرتبط (اختیاری)
-            </label>
+          <div className="form-group">
+            <label htmlFor="memberId">عضو مرتبط (اختیاری)</label>
             <select
+              id="memberId"
               name="memberId"
               value={formData.memberId}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:border-white/40"
             >
               <option value="">انتخاب کنید</option>
               {members.map((member) => (
@@ -175,19 +185,12 @@ function TransactionForm({ transaction, onSave, onCancel }) {
             </select>
           </div>
 
-          <div className="flex gap-3 pt-4">
-            <button
-              type="submit"
-              className="flex-1 px-6 py-3 bg-white text-indigo-600 rounded-lg font-medium hover:bg-white/90 transition-all"
-            >
-              {transaction ? "ذخیره تغییرات" : "ثبت تراکنش"}
-            </button>
-            <button
-              type="button"
-              onClick={onCancel}
-              className="flex-1 px-6 py-3 bg-white/10 text-white rounded-lg font-medium hover:bg-white/20 transition-all border border-white/20"
-            >
+          <div className="form-actions">
+            <button type="button" onClick={onCancel} className="btn-cancel">
               انصراف
+            </button>
+            <button type="submit" className="btn-submit">
+              {transaction ? "ذخیره تغییرات" : "ثبت تراکنش"}
             </button>
           </div>
         </form>

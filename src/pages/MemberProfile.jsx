@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { 
+  FaArrowLeft, FaEdit, FaMoneyBillWave, FaTrash, FaClipboardList, 
+  FaPhone, FaBirthdayCake, FaUser, FaStar, FaCalendar, FaCheck, 
+  FaTimes, FaDollarSign, FaChartBar, FaCalendarAlt, FaCheckCircle, FaTimesCircle 
+} from 'react-icons/fa';
 import { membersAPI, transactionsAPI, attendanceAPI } from '../services/api';
 import MemberAvatar from '../components/MemberAvatar';
 import MemberBadge from '../components/MemberBadge';
@@ -143,7 +148,7 @@ function MemberProfile() {
     <div className="member-profile-page">
       {/* دکمه بازگشت */}
       <button onClick={() => navigate('/members')} className="back-button">
-        ← بازگشت به لیست
+        <FaArrowLeft /> بازگشت به لیست
       </button>
 
       {/* هدر */}
@@ -167,13 +172,13 @@ function MemberProfile() {
         
         <div className="member-actions">
           <button onClick={() => setShowEditForm(true)} className="btn-action edit">
-            ✏️ ویرایش
+            <FaEdit /> ویرایش
           </button>
           <button onClick={() => setShowTransactionForm(true)} className="btn-action transaction">
-            💰 افزودن تراکنش
+            <FaMoneyBillWave /> افزودن تراکنش
           </button>
           <button onClick={() => setShowDeleteDialog(true)} className="btn-action delete">
-            🗑️ حذف
+            <FaTrash /> حذف
           </button>
         </div>
       </div>
@@ -184,19 +189,19 @@ function MemberProfile() {
           className={activeTab === 'info' ? 'active' : ''}
           onClick={() => setActiveTab('info')}
         >
-          📋 اطلاعات شخصی
+          <FaClipboardList /> اطلاعات شخصی
         </button>
         <button 
           className={activeTab === 'transactions' ? 'active' : ''}
           onClick={() => setActiveTab('transactions')}
         >
-          💰 تراکنش‌ها
+          <FaMoneyBillWave /> تراکنش‌ها
         </button>
         <button 
           className={activeTab === 'attendance' ? 'active' : ''}
           onClick={() => setActiveTab('attendance')}
         >
-          📊 حضور و غیاب
+          <FaChartBar /> حضور و غیاب
         </button>
       </div>
 
@@ -206,31 +211,35 @@ function MemberProfile() {
         {activeTab === 'info' && (
           <div className="info-grid">
             <div className="info-card">
-              <div className="info-label">📱 شماره تماس</div>
+              <div className="info-label"><FaPhone /> شماره تماس</div>
               <div className="info-value">{member.phone}</div>
             </div>
             <div className="info-card">
-              <div className="info-label">🎂 تاریخ تولد</div>
+              <div className="info-label"><FaUser /> جنسیت</div>
+              <div className="info-value">{member.gender || 'مرد'}</div>
+            </div>
+            <div className="info-card">
+              <div className="info-label"><FaBirthdayCake /> تاریخ تولد</div>
               <div className="info-value">{formatDate(member.birthDate)}</div>
             </div>
             <div className="info-card">
-              <div className="info-label">👤 نوع عضویت</div>
+              <div className="info-label"><FaUser /> نوع عضویت</div>
               <div className="info-value">
                 <MemberBadge type={member.memberType} variant="type" />
               </div>
             </div>
             <div className="info-card">
-              <div className="info-label">⭐ سطح عضویت</div>
+              <div className="info-label"><FaStar /> سطح عضویت</div>
               <div className="info-value">
                 <MemberBadge type={member.membershipLevel} variant="level" />
               </div>
             </div>
             <div className="info-card">
-              <div className="info-label">📅 تاریخ عضویت</div>
+              <div className="info-label"><FaCalendar /> تاریخ عضویت</div>
               <div className="info-value">{formatDate(member.joinDate)}</div>
             </div>
             <div className="info-card">
-              <div className="info-label">✓ وضعیت اشتراک</div>
+              <div className="info-label"><FaCheck /> وضعیت اشتراک</div>
               <div className="info-value">
                 <MemberBadge type={member.subscriptionStatus} variant="status" />
               </div>
@@ -243,17 +252,17 @@ function MemberProfile() {
           <div className="transactions-container">
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="stat-icon">💰</div>
+                <div className="stat-icon"><FaDollarSign /></div>
                 <div className="stat-value">{formatCurrency(calculateTotalPayments())}</div>
                 <div className="stat-label">مجموع پرداخت‌ها</div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">📊</div>
+                <div className="stat-icon"><FaChartBar /></div>
                 <div className="stat-value">{transactions.length}</div>
                 <div className="stat-label">تعداد تراکنش‌ها</div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">📅</div>
+                <div className="stat-icon"><FaCalendarAlt /></div>
                 <div className="stat-value">
                   {lastPayment ? formatDate(lastPayment.date) : '-'}
                 </div>
@@ -270,7 +279,7 @@ function MemberProfile() {
                 {transactions.map((transaction) => (
                   <div key={transaction.id} className="transaction-item">
                     <div className="transaction-icon">
-                      {transaction.type === 'درآمد' ? '💵' : '💸'}
+                      {transaction.type === 'درآمد' ? <FaCheckCircle className="text-green-500" /> : <FaTimesCircle className="text-red-500" />}
                     </div>
                     <div className="transaction-content">
                       <div className="transaction-title">{transaction.title}</div>
@@ -296,22 +305,22 @@ function MemberProfile() {
               <>
                 <div className="stats-grid">
                   <div className="stat-card">
-                    <div className="stat-icon">✓</div>
+                    <div className="stat-icon"><FaCheck /></div>
                     <div className="stat-value">{memberStats.present_count || 0}</div>
                     <div className="stat-label">حاضر</div>
                   </div>
                   <div className="stat-card">
-                    <div className="stat-icon">✗</div>
+                    <div className="stat-icon"><FaTimes /></div>
                     <div className="stat-value">{memberStats.absent_count || 0}</div>
                     <div className="stat-label">غایب</div>
                   </div>
                   <div className="stat-card">
-                    <div className="stat-icon">📋</div>
+                    <div className="stat-icon"><FaClipboardList /></div>
                     <div className="stat-value">{memberStats.leave_count || 0}</div>
                     <div className="stat-label">مرخصی</div>
                   </div>
                   <div className="stat-card">
-                    <div className="stat-icon">📊</div>
+                    <div className="stat-icon"><FaChartBar /></div>
                     <div className="stat-value">{attendancePercentage}%</div>
                     <div className="stat-label">درصد حضور</div>
                   </div>

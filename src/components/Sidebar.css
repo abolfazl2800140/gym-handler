@@ -1,5 +1,6 @@
 .sidebar {
   @apply w-64 h-screen bg-white/10 backdrop-blur-lg flex flex-col;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-header {
@@ -16,7 +17,7 @@
 }
 
 .user-avatar {
-  @apply w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 
+  @apply w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 
   flex items-center justify-center text-white flex-shrink-0;
 }
 
