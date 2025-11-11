@@ -1,7 +1,5 @@
 .member-profile-page {
-  padding: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .back-button {
@@ -367,10 +365,6 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .member-profile-page {
-    padding: 20px;
-  }
-
   .member-header-content {
     flex-direction: column;
     text-align: center;

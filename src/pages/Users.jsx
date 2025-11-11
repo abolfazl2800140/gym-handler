@@ -114,7 +114,7 @@ function Users() {
         </div>
         {isSuperAdmin && (
           <button onClick={handleAddUser} className="btn-primary">
-            <span>➕</span>
+            <span className='text-xl'>+</span>
             افزودن ادمین
           </button>
         )}

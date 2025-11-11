@@ -23,13 +23,14 @@ exports.getAllUsers = async (req, res) => {
       `;
       params = [currentUser.id];
     } else {
-      // Admin هیچ کس رو نمی‌بینه (حتی خودش رو)
+      // Admin فقط خودش رو می‌بینه
       query = `
         SELECT id, username, email, first_name, last_name, phone, 
                avatar_url, role, is_active, created_at, updated_at
         FROM users
-        WHERE 1=0
+        WHERE id = $1
       `;
+      params = [currentUser.id];
     }
 
     const result = await db.query(query, params);

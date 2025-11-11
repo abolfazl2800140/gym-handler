@@ -8,22 +8,6 @@
   transition: all 0.3s ease;
 }
 
-.member-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.member-card:hover::before {
-  transform: scaleX(1);
-}
-
 .member-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -77,25 +61,16 @@
 }
 
 /* بهبود نمای جدولی */
-.table-row-hover {
-  position: relative;
+tbody tr {
+  transition: background-color 0.2s ease;
 }
 
-.table-row-hover::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 0;
-  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-  transition: height 0.3s ease;
-  border-radius: 0 4px 4px 0;
+tbody tr:hover {
+  background: rgba(66, 153, 225, 0.15) !important;
 }
 
-.table-row-hover:hover::before {
-  height: 80%;
+tbody tr:hover td {
+  color: #1a202c !important;
 }
 
 /* Responsive */

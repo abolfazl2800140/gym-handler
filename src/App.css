@@ -3,5 +3,5 @@
 }
 
 .main-content {
-  @apply flex-1 overflow-auto;
+  @apply flex-1 overflow-auto p-6;
 }

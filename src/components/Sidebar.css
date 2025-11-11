@@ -1,5 +1,6 @@
 .sidebar {
   @apply w-64 h-screen bg-white/10 backdrop-blur-lg flex flex-col;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-header {
