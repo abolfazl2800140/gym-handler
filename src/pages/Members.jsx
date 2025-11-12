@@ -218,7 +218,8 @@ function Members() {
           <FaUsers /> مدیریت اعضا
         </h1>
         <div className="flex gap-3">
-          <div className="flex bg-white/10 backdrop-blur-lg rounded-lg p-1">
+          {/* دکمه‌های تغییر نما - فقط در دسکتاپ */}
+          <div className="hidden lg:flex bg-white/10 backdrop-blur-lg rounded-lg p-1">
             <button
               onClick={() => setViewMode("table")}
               className={`px-4 py-2 rounded-md transition-all ${
@@ -275,8 +276,9 @@ function Members() {
         onStatusChange={setStatusFilter}
       />
 
+      {/* نمای جدولی - در موبایل مخفی، در دسکتاپ بر اساس انتخاب کاربر */}
       {viewMode === "table" && (
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col" style={{ height: 'calc(100vh - 200px)' }}>
+        <div className="hidden lg:block bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col" style={{ height: 'calc(100vh - 200px)' }}>
           {/* جدول با header ثابت */}
           <div className="overflow-auto flex-1">
             <table className="w-full">
@@ -482,8 +484,8 @@ function Members() {
         </div>
       )}
 
-      {viewMode === "card" && (
-        <div className="overflow-auto" style={{ height: 'calc(100vh - 160px)' }}>
+      {/* نمای کارتی - در موبایل همیشه نمایش، در دسکتاپ بر اساس انتخاب کاربر */}
+      <div className={`${viewMode === "card" ? "block" : "lg:hidden"} overflow-auto`} style={{ height: 'calc(100vh - 160px)' }}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
             {filteredAndSortedMembers.map((member) => (
             <div

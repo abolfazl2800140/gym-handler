@@ -1,6 +1,40 @@
+/* دکمه همبرگر - فقط در موبایل */
+.mobile-menu-button {
+  @apply fixed top-4 left-4 z-50 lg:hidden
+  w-12 h-12 bg-white rounded-lg shadow-lg
+  flex items-center justify-center text-gray-800 text-xl
+  hover:bg-gray-100 transition-all active:scale-95;
+}
+
+/* Overlay برای موبایل */
+.mobile-overlay {
+  @apply fixed inset-0 bg-black/50 z-40 lg:hidden;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .sidebar {
-  @apply w-64 h-screen bg-white/10 backdrop-blur-lg flex flex-col;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  @apply w-64 h-screen bg-white backdrop-blur-lg flex flex-col;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  
+  /* در دسکتاپ: relative و ثابت */
+  @apply relative;
+  
+  /* در موبایل: fixed و مخفی در سمت راست */
+  @apply lg:relative lg:translate-x-0;
+  @apply max-lg:fixed max-lg:top-0 max-lg:right-0 max-lg:z-50 max-lg:translate-x-full;
+  
+  /* انیمیشن */
+  @apply transition-transform duration-300;
+}
+
+/* وقتی منوی موبایل باز است */
+.sidebar.mobile-open {
+  @apply translate-x-0;
 }
 
 .sidebar-header {
