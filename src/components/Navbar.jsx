@@ -15,9 +15,14 @@ function Sidebar() {
     setShowLogoutDialog(true);
   };
 
-  const handleConfirmLogout = () => {
-    authService.logout();
-    setShowLogoutDialog(false);
+  const handleConfirmLogout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setShowLogoutDialog(false);
+    }
   };
 
   const handleCancelLogout = () => {

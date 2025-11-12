@@ -144,10 +144,21 @@ export const authService = {
   /**
    * خروج کاربر
    */
-  logout: () => {
-    tokenManager.removeToken();
-    userManager.removeUser();
-    window.location.href = '/login';
+  logout: async () => {
+    try {
+      // ارسال درخواست logout به سرور برای ثبت لاگ
+      await authApiCall('/auth/logout', {
+        method: 'POST'
+      });
+    } catch (error) {
+      // حتی اگر خطا داشت، کاربر رو logout کن
+      console.error('Error during logout:', error);
+    } finally {
+      // پاک کردن token و اطلاعات کاربر
+      tokenManager.removeToken();
+      userManager.removeUser();
+      window.location.href = '/login';
+    }
   },
 
   /**

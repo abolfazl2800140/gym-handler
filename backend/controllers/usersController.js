@@ -261,12 +261,20 @@ exports.deleteUser = async (req, res) => {
       });
     }
 
+    const userToDelete = userCheck.rows[0];
+
     // حذف کاربر
     await db.query('DELETE FROM users WHERE id = $1', [id]);
 
     res.json({
       success: true,
-      message: 'کاربر با موفقیت حذف شد'
+      message: 'کاربر با موفقیت حذف شد',
+      deletedUser: {
+        username: userToDelete.username,
+        email: userToDelete.email,
+        role: userToDelete.role,
+        id: userToDelete.id
+      }
     });
   } catch (error) {
     console.error('Error in deleteUser:', error);

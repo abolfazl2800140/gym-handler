@@ -178,9 +178,16 @@ exports.deleteMember = async (req, res) => {
       return res.status(404).json({ success: false, error: 'Member not found' });
     }
 
+    const deletedMember = result.rows[0];
+
     res.json({ 
       success: true, 
-      message: 'Member deleted successfully' 
+      message: 'Member deleted successfully',
+      deletedMember: {
+        firstName: deletedMember.first_name,
+        lastName: deletedMember.last_name,
+        id: deletedMember.id
+      }
     });
   } catch (error) {
     console.error('Error deleting member:', error);

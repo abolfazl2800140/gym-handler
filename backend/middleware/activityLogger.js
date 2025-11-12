@@ -28,11 +28,15 @@ const activityLoggerMiddleware = (req, res, next) => {
     // Store original methods
     const originalJson = res.json;
     const originalSend = res.send;
+    
+    // Flag to prevent duplicate logging
+    let logged = false;
 
     // Override res.json
     res.json = function (data) {
-        // Log successful operations
-        if (res.statusCode >= 200 && res.statusCode < 300) {
+        // Log successful operations (only once)
+        if (!logged && res.statusCode >= 200 && res.statusCode < 300) {
+            logged = true;
             logActivityFromRequest(req, res, data);
         }
         return originalJson.call(this, data);
@@ -40,7 +44,9 @@ const activityLoggerMiddleware = (req, res, next) => {
 
     // Override res.send
     res.send = function (data) {
-        if (res.statusCode >= 200 && res.statusCode < 300) {
+        // Log successful operations (only once)
+        if (!logged && res.statusCode >= 200 && res.statusCode < 300) {
+            logged = true;
             logActivityFromRequest(req, res, data);
         }
         return originalSend.call(this, data);
@@ -52,9 +58,12 @@ const activityLoggerMiddleware = (req, res, next) => {
 // Helper to determine action and description from request
 const logActivityFromRequest = (req, res, responseData) => {
     const method = req.method;
-    const path = req.path;
+    const path = req.originalUrl || req.url; // استفاده از originalUrl برای دریافت مسیر کامل
     const ipAddress = req.ip || req.connection.remoteAddress;
     const userAgent = req.get('user-agent');
+
+    // Debug log
+    console.log(`🔍 Activity Logger: ${method} ${path}`);
 
     let action = '';
     let entityType = '';
@@ -78,7 +87,12 @@ const logActivityFromRequest = (req, res, responseData) => {
         } else if (method === 'DELETE') {
             action = 'حذف';
             const memberId = req.params.id;
-            description = `عضو حذف شد (ID: ${memberId})`;
+            const deletedMember = responseData?.deletedMember;
+            if (deletedMember) {
+                description = `عضو "${deletedMember.firstName} ${deletedMember.lastName}" حذف شد`;
+            } else {
+                description = `عضو حذف شد (ID: ${memberId})`;
+            }
             entityId = parseInt(memberId);
         } else {
             return; // Don't log GET requests
@@ -102,7 +116,12 @@ const logActivityFromRequest = (req, res, responseData) => {
         } else if (method === 'DELETE') {
             action = 'حذف';
             const transactionId = req.params.id;
-            description = `تراکنش حذف شد (ID: ${transactionId})`;
+            const deletedTransaction = responseData?.deletedTransaction;
+            if (deletedTransaction) {
+                description = `تراکنش "${deletedTransaction.title}" حذف شد (${deletedTransaction.type} - ${parseInt(deletedTransaction.amount).toLocaleString('fa-IR')} تومان)`;
+            } else {
+                description = `تراکنش حذف شد (ID: ${transactionId})`;
+            }
             entityId = parseInt(transactionId);
         } else {
             return;
@@ -151,7 +170,13 @@ const logActivityFromRequest = (req, res, responseData) => {
             entityId = parseInt(userId);
         } else if (method === 'DELETE') {
             action = 'حذف';
-            description = `کاربر حذف شد (ID: ${userId})`;
+            const deletedUser = responseData?.deletedUser;
+            if (deletedUser) {
+                const roleText = deletedUser.role === 'super_admin' ? 'مدیر ارشد' : deletedUser.role === 'admin' ? 'مدیر' : 'کاربر';
+                description = `کاربر "${deletedUser.username}" (${roleText}) حذف شد`;
+            } else {
+                description = `کاربر حذف شد (ID: ${userId})`;
+            }
             entityId = parseInt(userId);
         }
     }

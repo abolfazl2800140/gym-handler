@@ -240,6 +240,9 @@ function ActivityLogs() {
                                     توضیحات
                                 </th>
                                 <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
+                                    دستگاه
+                                </th>
+                                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
                                     IP
                                 </th>
                             </tr>
@@ -285,6 +288,12 @@ function ActivityLogs() {
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-600">
                                             {log.description}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-700">
+                                            <div className="flex flex-col gap-1">
+                                                <span className="font-medium">{log.device || "نامشخص"}</span>
+                                                <span className="text-xs text-gray-500">{log.os || ""}</span>
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500 font-mono">
                                             {log.ip_address || "-"}

@@ -1,4 +1,5 @@
 const db = require('../config/database');
+const { detectDevice, detectBrowser, detectOS } = require('../utils/deviceDetector');
 
 // GET /api/activity-logs - Get all activity logs with filters
 exports.getActivityLogs = async (req, res) => {
@@ -71,6 +72,7 @@ exports.getActivityLogs = async (req, res) => {
         entity_id,
         description,
         ip_address,
+        user_agent,
         created_at
       FROM activity_logs
       ${whereClause}
@@ -79,9 +81,17 @@ exports.getActivityLogs = async (req, res) => {
             [...queryParams, limit, offset]
         );
 
+        // اضافه کردن اطلاعات دستگاه به هر لاگ
+        const logsWithDeviceInfo = logsResult.rows.map(log => ({
+            ...log,
+            device: detectDevice(log.user_agent),
+            browser: detectBrowser(log.user_agent),
+            os: detectOS(log.user_agent)
+        }));
+
         res.json({
             success: true,
-            data: logsResult.rows,
+            data: logsWithDeviceInfo,
             pagination: {
                 page: parseInt(page),
                 limit: parseInt(limit),
