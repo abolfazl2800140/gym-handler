@@ -126,6 +126,58 @@ const logActivityFromRequest = (req, res, responseData) => {
         }
     }
 
+    // Users (مدیریت کاربران)
+    else if (path.includes('/users') && !path.includes('/users/') && !path.includes('change-password')) {
+        entityType = 'کاربر';
+        if (method === 'POST') {
+            action = 'ایجاد';
+            const user = req.body;
+            description = `کاربر جدید ایجاد شد: ${user.username} (${user.email}) - نقش: ${user.role === 'super_admin' ? 'مدیر ارشد' : user.role === 'admin' ? 'مدیر' : 'کاربر'}`;
+            entityId = responseData?.data?.id;
+        } else {
+            return;
+        }
+    }
+
+    // User Update/Delete
+    else if (path.match(/\/users\/\d+$/) && method !== 'GET') {
+        entityType = 'کاربر';
+        const userId = req.params.id;
+        
+        if (method === 'PUT') {
+            action = 'ویرایش';
+            const user = req.body;
+            description = `اطلاعات کاربر ویرایش شد: ${user.username || 'نامشخص'}`;
+            entityId = parseInt(userId);
+        } else if (method === 'DELETE') {
+            action = 'حذف';
+            description = `کاربر حذف شد (ID: ${userId})`;
+            entityId = parseInt(userId);
+        }
+    }
+
+    // Change Password
+    else if (path.includes('change-password')) {
+        entityType = 'کاربر';
+        action = 'تغییر رمز';
+        const userId = req.params.id;
+        const isOwnPassword = req.user?.id === parseInt(userId);
+        description = isOwnPassword 
+            ? `رمز عبور خود را تغییر داد`
+            : `رمز عبور کاربر (ID: ${userId}) را تغییر داد`;
+        entityId = parseInt(userId);
+    }
+
+    // Toggle User Status
+    else if (path.includes('toggle-status')) {
+        entityType = 'کاربر';
+        action = 'تغییر وضعیت';
+        const userId = req.params.id;
+        const newStatus = responseData?.is_active ? 'فعال' : 'غیرفعال';
+        description = `وضعیت کاربر (ID: ${userId}) به ${newStatus} تغییر کرد`;
+        entityId = parseInt(userId);
+    }
+
     // AI Assistant
     else if (path.includes('/ai/ask')) {
         entityType = 'دستیار هوش مصنوعی';
@@ -153,4 +205,8 @@ const logActivityFromRequest = (req, res, responseData) => {
     }
 };
 
-module.exports = { activityLoggerMiddleware, logActivity };
+// Export both middleware and helper function
+module.exports = { 
+  activityLoggerMiddleware, 
+  logActivity 
+};

@@ -11,6 +11,7 @@ import TrendChart from "../components/TrendChart";
 import ComparisonChart from "../components/ComparisonChart";
 import AdvancedStats from "../components/AdvancedStats";
 import { membersAPI, transactionsAPI } from "../services/api";
+import notification from "../services/notification";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -465,7 +466,7 @@ function Reports() {
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error("خطا در تولید PDF:", error);
-      alert("خطا در تولید فایل PDF");
+      notification.error("خطا در تولید فایل PDF");
     }
   };
 
@@ -551,7 +552,7 @@ function Reports() {
       );
     } catch (error) {
       console.error("خطا در تولید Excel:", error);
-      alert("خطا در تولید فایل Excel");
+      notification.error("خطا در تولید فایل Excel");
     }
   };
 

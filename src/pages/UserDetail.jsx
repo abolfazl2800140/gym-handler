@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fa';
 import { usersAPI } from '../services/api';
 import { userManager } from '../services/auth';
+import notification from '../services/notification';
 import UserForm from '../components/UserForm';
 import ChangePasswordForm from '../components/ChangePasswordForm';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -45,7 +46,7 @@ function UserDetail() {
       if (activitiesRes.success) setActivities(activitiesRes.activities);
     } catch (error) {
       console.error('Error fetching user data:', error);
-      alert('خطا در دریافت اطلاعات');
+      notification.error('خطا در دریافت اطلاعات');
       navigate('/users');
     } finally {
       setLoading(false);
@@ -53,18 +54,21 @@ function UserDetail() {
   };
 
   const handleToggleStatus = async () => {
-    if (!confirm(`آیا مطمئن هستید که می‌خواهید این حساب را ${user.is_active ? 'غیرفعال' : 'فعال'} کنید؟`)) {
-      return;
-    }
+    const result = await notification.confirm(
+      `آیا مطمئن هستید که می‌خواهید این حساب را ${user.is_active ? 'غیرفعال' : 'فعال'} کنید؟`,
+      'تغییر وضعیت حساب'
+    );
+    
+    if (!result.isConfirmed) return;
 
     try {
       const response = await usersAPI.toggleStatus(id);
       if (response.success) {
-        alert(response.message);
+        notification.success(response.message);
         fetchUserData();
       }
     } catch (error) {
-      alert(error.message || 'خطا در تغییر وضعیت');
+      notification.error(error.message || 'خطا در تغییر وضعیت');
     }
   };
 
@@ -72,11 +76,11 @@ function UserDetail() {
     try {
       const response = await usersAPI.delete(id);
       if (response.success) {
-        alert('ادمین با موفقیت حذف شد');
+        notification.success('ادمین با موفقیت حذف شد');
         navigate('/users');
       }
     } catch (error) {
-      alert(error.message || 'خطا در حذف ادمین');
+      notification.error(error.message || 'خطا در حذف ادمین');
     } finally {
       setShowDeleteDialog(false);
     }
@@ -188,7 +192,7 @@ function UserDetail() {
                 `${user.first_name} ${user.last_name}` : 
                 user.username}
             </h1>
-            <p className="username">@{user.username}</p>
+            <p className="username">@{user.username} • شناسه: {user.id}</p>
             <div className="badges">
               <span className={`role-badge ${badge.class}`}>
                 {badge.icon} {badge.text}

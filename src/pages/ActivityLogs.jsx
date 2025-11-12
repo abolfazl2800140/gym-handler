@@ -76,6 +76,11 @@ function ActivityLogs() {
             ویرایش: "bg-blue-100 text-blue-800",
             حذف: "bg-red-100 text-red-800",
             ثبت: "bg-purple-100 text-purple-800",
+            ورود: "bg-emerald-100 text-emerald-800",
+            خروج: "bg-gray-100 text-gray-800",
+            "ورود ناموفق": "bg-red-100 text-red-800",
+            "تغییر رمز": "bg-indigo-100 text-indigo-800",
+            "تغییر وضعیت": "bg-orange-100 text-orange-800",
             سوال: "bg-yellow-100 text-yellow-800",
         };
         return colors[action] || "bg-gray-100 text-gray-800";
@@ -84,8 +89,10 @@ function ActivityLogs() {
     const getEntityIcon = (entityType) => {
         const icons = {
             عضو: <FaUser />,
+            کاربر: <FaUser />,
             تراکنش: <FaCheckCircle />,
             "حضور و غیاب": <FaClipboardList />,
+            "احراز هویت": <FaUser />,
             "دستیار هوش مصنوعی": <FaRobot />,
         };
         return icons[entityType] || <FaClipboardList />;
@@ -159,6 +166,11 @@ function ActivityLogs() {
                         <option value="ویرایش">ویرایش</option>
                         <option value="حذف">حذف</option>
                         <option value="ثبت">ثبت</option>
+                        <option value="ورود">ورود</option>
+                        <option value="خروج">خروج</option>
+                        <option value="ورود ناموفق">ورود ناموفق</option>
+                        <option value="تغییر رمز">تغییر رمز</option>
+                        <option value="تغییر وضعیت">تغییر وضعیت</option>
                         <option value="سوال">سوال</option>
                     </select>
 
@@ -169,8 +181,10 @@ function ActivityLogs() {
                     >
                         <option value="">همه بخش‌ها</option>
                         <option value="عضو">عضو</option>
+                        <option value="کاربر">کاربر</option>
                         <option value="تراکنش">تراکنش</option>
                         <option value="حضور و غیاب">حضور و غیاب</option>
+                        <option value="احراز هویت">احراز هویت</option>
                         <option value="دستیار هوش مصنوعی">دستیار هوش مصنوعی</option>
                     </select>
 

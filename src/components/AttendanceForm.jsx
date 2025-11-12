@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import notification from '../services/notification';
 import '../styles/UserForm.css';
 import '../styles/AttendanceForm.css';
 
@@ -63,7 +64,7 @@ function AttendanceForm({ date, members, onSave, onCancel, existingAttendance })
     
     // Validation
     if (!attendanceData || Object.keys(attendanceData).length === 0) {
-      alert('لطفاً حداقل یک عضو را انتخاب کنید');
+      notification.warning('لطفاً حداقل یک عضو را انتخاب کنید');
       return;
     }
     

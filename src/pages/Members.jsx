@@ -282,6 +282,11 @@ function Members() {
             <table className="w-full">
               <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200 sticky top-0 z-10">
               <tr>
+                <th className="px-6 py-4 text-gray-700 text-right text-sm font-semibold">
+                  <div className="flex items-center gap-2">
+                    <FaTag /> شناسه
+                  </div>
+                </th>
                 <th 
                   className="px-6 py-4 text-gray-700 text-right text-sm font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
                   onClick={() => handleSort('name')}
@@ -350,6 +355,11 @@ function Members() {
                   } hover:bg-blue-50 hover:shadow-md`}
                   onClick={() => navigate(`/members/${member.id}`)}
                 >
+                  <td className="px-6 py-4">
+                    <span className="text-gray-600 font-bold text-sm">
+                      #{member.id}
+                    </span>
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <MemberAvatar
@@ -491,7 +501,7 @@ function Members() {
                   <h3 className="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">
                     {member.firstName} {member.lastName}
                   </h3>
-                  <p className="text-sm text-gray-600">{member.phone}</p>
+                  <p className="text-sm text-gray-600">{member.phone} • #{member.id}</p>
                 </div>
               </div>
 

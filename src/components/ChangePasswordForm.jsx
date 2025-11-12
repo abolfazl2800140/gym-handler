@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { usersAPI } from '../services/api';
 import { userManager } from '../services/auth';
+import notification from '../services/notification';
 import '../styles/UserForm.css';
 
 function ChangePasswordForm({ user, onClose, onSuccess }) {
@@ -59,7 +60,7 @@ function ChangePasswordForm({ user, onClose, onSuccess }) {
       const response = await usersAPI.changePassword(user.id, passwordData);
 
       if (response.success) {
-        alert('رمز عبور با موفقیت تغییر کرد');
+        notification.success('رمز عبور با موفقیت تغییر کرد');
         onSuccess();
       }
     } catch (err) {
