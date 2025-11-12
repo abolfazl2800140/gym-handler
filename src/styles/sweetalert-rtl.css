@@ -1,0 +1,102 @@
+/* استایل‌های RTL برای SweetAlert2 */
+
+.rtl-popup {
+  direction: rtl;
+  text-align: right;
+  font-family: Vazir, sans-serif;
+}
+
+.rtl-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  font-family: Vazir, sans-serif;
+}
+
+.rtl-content {
+  font-size: 1rem;
+  line-height: 1.8;
+  font-family: Vazir, sans-serif;
+}
+
+.swal-btn-confirm,
+.swal-btn-cancel {
+  font-family: Vazir, sans-serif;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.swal-btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.swal-btn-cancel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+}
+
+/* Toast استایل‌های */
+.swal2-toast {
+  direction: rtl;
+  font-family: Vazir, sans-serif;
+}
+
+.swal2-toast .swal2-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: Vazir, sans-serif;
+}
+
+/* فونت برای تمام المان‌های SweetAlert2 */
+.swal2-popup,
+.swal2-title,
+.swal2-html-container,
+.swal2-content,
+.swal2-input,
+.swal2-textarea,
+.swal2-select,
+.swal2-confirm,
+.swal2-cancel,
+.swal2-deny,
+.swal2-actions button {
+  font-family: Vazir, sans-serif !important;
+}
+
+/* انیمیشن‌های بهتر */
+.swal2-show {
+  animation: swal2-show 0.3s;
+}
+
+.swal2-hide {
+  animation: swal2-hide 0.15s;
+}
+
+@keyframes swal2-show {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  45% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes swal2-hide {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}

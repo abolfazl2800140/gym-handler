@@ -180,11 +180,11 @@ function FinancialChart({ transactions }) {
   };
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
-      <h3 className="text-xl font-bold text-gray-800 mb-6">
+    <div className="bg-white rounded-xl p-4 lg:p-6 shadow-lg mb-6">
+      <h3 className="text-lg lg:text-xl font-bold text-gray-800 mb-4 lg:mb-6">
         نمودار درآمد و هزینه ماهانه
       </h3>
-      <div className="h-96">
+      <div className="h-64 lg:h-96">
         <Bar data={data} options={options} />
       </div>
     </div>

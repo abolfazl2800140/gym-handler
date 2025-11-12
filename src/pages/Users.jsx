@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaKey, FaUserTie, FaUsers, FaEdit, FaLock, FaTrash, FaPlus } from 'react-icons/fa';
 import { usersAPI } from '../services/api';
 import { userManager } from '../services/auth';
+import notification from '../services/notification';
 import UserForm from '../components/UserForm';
 import ChangePasswordForm from '../components/ChangePasswordForm';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -34,7 +35,7 @@ function Users() {
       }
     } catch (error) {
       console.error('Error fetching users:', error);
-      alert('خطا در دریافت لیست ادمین‌ها');
+      notification.error('خطا در دریافت لیست ادمین‌ها');
     } finally {
       setLoading(false);
     }
@@ -64,11 +65,11 @@ function Users() {
     try {
       const response = await usersAPI.delete(userToDelete.id);
       if (response.success) {
-        alert('ادمین با موفقیت حذف شد');
+        notification.success('ادمین با موفقیت حذف شد');
         fetchUsers();
       }
     } catch (error) {
-      alert(error.message || 'خطا در حذف ادمین');
+      notification.error(error.message || 'خطا در حذف ادمین');
     } finally {
       setShowDeleteDialog(false);
       setUserToDelete(null);
@@ -146,6 +147,10 @@ function Users() {
                   `${user.first_name} ${user.last_name}` : 
                   user.username}
                 </h3>
+                <div className="user-info-item">
+                  <span className="label">شناسه:</span>
+                  <span className="value">{user.id}</span>
+                </div>
                 <div className="user-info-item">
                   <span className="label">نام کاربری:</span>
                   <span className="value">{user.username}</span>

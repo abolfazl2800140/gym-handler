@@ -172,9 +172,17 @@ exports.deleteTransaction = async (req, res) => {
       return res.status(404).json({ success: false, error: 'Transaction not found' });
     }
 
+    const deletedTransaction = result.rows[0];
+
     res.json({ 
       success: true, 
-      message: 'Transaction deleted successfully' 
+      message: 'Transaction deleted successfully',
+      deletedTransaction: {
+        title: deletedTransaction.title,
+        type: deletedTransaction.type,
+        amount: deletedTransaction.amount,
+        id: deletedTransaction.id
+      }
     });
   } catch (error) {
     console.error('Error deleting transaction:', error);

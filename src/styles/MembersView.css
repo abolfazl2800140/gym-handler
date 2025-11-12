@@ -80,4 +80,20 @@ tbody tr:hover td {
     width: 100%;
     justify-content: center;
   }
+  
+  .member-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .member-card:active {
+    transform: scale(0.98);
+  }
+}
+
+/* بهبود touch targets در موبایل */
+@media (max-width: 640px) {
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }

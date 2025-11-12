@@ -76,6 +76,11 @@ function ActivityLogs() {
             ویرایش: "bg-blue-100 text-blue-800",
             حذف: "bg-red-100 text-red-800",
             ثبت: "bg-purple-100 text-purple-800",
+            ورود: "bg-emerald-100 text-emerald-800",
+            خروج: "bg-gray-100 text-gray-800",
+            "ورود ناموفق": "bg-red-100 text-red-800",
+            "تغییر رمز": "bg-indigo-100 text-indigo-800",
+            "تغییر وضعیت": "bg-orange-100 text-orange-800",
             سوال: "bg-yellow-100 text-yellow-800",
         };
         return colors[action] || "bg-gray-100 text-gray-800";
@@ -84,21 +89,23 @@ function ActivityLogs() {
     const getEntityIcon = (entityType) => {
         const icons = {
             عضو: <FaUser />,
+            کاربر: <FaUser />,
             تراکنش: <FaCheckCircle />,
             "حضور و غیاب": <FaClipboardList />,
+            "احراز هویت": <FaUser />,
             "دستیار هوش مصنوعی": <FaRobot />,
         };
         return icons[entityType] || <FaClipboardList />;
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 lg:space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+                    <h1 className="text-2xl lg:text-3xl font-bold text-black flex items-center gap-2">
                         <FaChartBar /> لاگ فعالیت‌ها
                     </h1>
-                    <p className="text-gray-600 mt-2">
+                    <p className="text-gray-600 mt-2 text-sm lg:text-base">
                         تمام فعالیت‌های انجام شده در سیستم
                     </p>
                 </div>
@@ -106,37 +113,37 @@ function ActivityLogs() {
 
             {/* Stats Cards */}
             {stats && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
-                        <div className="text-sm opacity-90">فعالیت 24 ساعت اخیر</div>
-                        <div className="text-3xl font-bold mt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 lg:p-6 text-white">
+                        <div className="text-xs lg:text-sm opacity-90">فعالیت 24 ساعت اخیر</div>
+                        <div className="text-2xl lg:text-3xl font-bold mt-2">
                             {stats.recentActivity}
                         </div>
                     </div>
-                    <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white">
-                        <div className="text-sm opacity-90">بیشترین فعالیت</div>
-                        <div className="text-xl font-bold mt-2">
+                    <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-4 lg:p-6 text-white">
+                        <div className="text-xs lg:text-sm opacity-90">بیشترین فعالیت</div>
+                        <div className="text-lg lg:text-xl font-bold mt-2 truncate">
                             {stats.byAction[0]?.action || "-"}
                         </div>
-                        <div className="text-sm opacity-75">
+                        <div className="text-xs lg:text-sm opacity-75">
                             {stats.byAction[0]?.count || 0} مورد
                         </div>
                     </div>
-                    <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
-                        <div className="text-sm opacity-90">بیشترین بخش</div>
-                        <div className="text-xl font-bold mt-2">
+                    <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-4 lg:p-6 text-white">
+                        <div className="text-xs lg:text-sm opacity-90">بیشترین بخش</div>
+                        <div className="text-lg lg:text-xl font-bold mt-2 truncate">
                             {stats.byEntityType[0]?.entity_type || "-"}
                         </div>
-                        <div className="text-sm opacity-75">
+                        <div className="text-xs lg:text-sm opacity-75">
                             {stats.byEntityType[0]?.count || 0} مورد
                         </div>
                     </div>
-                    <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white">
-                        <div className="text-sm opacity-90">فعال‌ترین کاربر</div>
-                        <div className="text-xl font-bold mt-2">
+                    <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-4 lg:p-6 text-white">
+                        <div className="text-xs lg:text-sm opacity-90">فعال‌ترین کاربر</div>
+                        <div className="text-lg lg:text-xl font-bold mt-2 truncate">
                             {stats.byUser[0]?.username || "-"}
                         </div>
-                        <div className="text-sm opacity-75">
+                        <div className="text-xs lg:text-sm opacity-75">
                             {stats.byUser[0]?.count || 0} فعالیت
                         </div>
                     </div>
@@ -144,33 +151,40 @@ function ActivityLogs() {
             )}
 
             {/* Filters */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <div className="bg-white rounded-xl shadow-lg p-4 lg:p-6">
+                <h3 className="text-base lg:text-lg font-semibold mb-4 flex items-center gap-2">
                     <FaSearch /> فیلترها
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
                     <select
                         value={filters.action}
                         onChange={(e) => handleFilterChange("action", e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
+                        className="px-4 py-3 lg:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black text-base"
                     >
                         <option value="">همه عملیات</option>
                         <option value="ایجاد">ایجاد</option>
                         <option value="ویرایش">ویرایش</option>
                         <option value="حذف">حذف</option>
                         <option value="ثبت">ثبت</option>
+                        <option value="ورود">ورود</option>
+                        <option value="خروج">خروج</option>
+                        <option value="ورود ناموفق">ورود ناموفق</option>
+                        <option value="تغییر رمز">تغییر رمز</option>
+                        <option value="تغییر وضعیت">تغییر وضعیت</option>
                         <option value="سوال">سوال</option>
                     </select>
 
                     <select
                         value={filters.entityType}
                         onChange={(e) => handleFilterChange("entityType", e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
+                        className="px-4 py-3 lg:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black text-base"
                     >
                         <option value="">همه بخش‌ها</option>
                         <option value="عضو">عضو</option>
+                        <option value="کاربر">کاربر</option>
                         <option value="تراکنش">تراکنش</option>
                         <option value="حضور و غیاب">حضور و غیاب</option>
+                        <option value="احراز هویت">احراز هویت</option>
                         <option value="دستیار هوش مصنوعی">دستیار هوش مصنوعی</option>
                     </select>
 
@@ -179,35 +193,35 @@ function ActivityLogs() {
                         value={filters.username}
                         onChange={(e) => handleFilterChange("username", e.target.value)}
                         placeholder="نام کاربر..."
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
+                        className="px-4 py-3 lg:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black text-base"
                     />
 
                     <SimplePersianDatePicker
                         key={`start-${filters.startDate}`}
                         value={filters.startDate}
                         onChange={(date) => handleFilterChange("startDate", date)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full text-black"
+                        className="px-4 py-3 lg:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full text-black text-base"
                     />
 
                     <SimplePersianDatePicker
                         key={`end-${filters.endDate}`}
                         value={filters.endDate}
                         onChange={(date) => handleFilterChange("endDate", date)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full text-black"
+                        className="px-4 py-3 lg:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full text-black text-base"
                     />
                 </div>
                 <button
                     onClick={clearFilters}
-                    className="mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    className="mt-4 px-4 py-3 lg:py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 active:bg-gray-400 transition-colors text-sm lg:text-base min-h-[44px] lg:min-h-0"
                 >
                     پاک کردن فیلترها
                 </button>
             </div>
 
-            {/* Logs Table */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            {/* Logs Table - Desktop */}
+            <div className="hidden lg:block bg-white rounded-xl shadow-lg overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full">
+                    <table className="w-full min-w-[1000px]">
                         <thead className="bg-gray-50 border-b border-gray-200">
                             <tr>
                                 <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
@@ -224,6 +238,9 @@ function ActivityLogs() {
                                 </th>
                                 <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
                                     توضیحات
+                                </th>
+                                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
+                                    دستگاه
                                 </th>
                                 <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
                                     IP
@@ -272,6 +289,12 @@ function ActivityLogs() {
                                         <td className="px-6 py-4 text-sm text-gray-600">
                                             {log.description}
                                         </td>
+                                        <td className="px-6 py-4 text-sm text-gray-700">
+                                            <div className="flex flex-col gap-1">
+                                                <span className="font-medium">{log.device || "نامشخص"}</span>
+                                                <span className="text-xs text-gray-500">{log.os || ""}</span>
+                                            </div>
+                                        </td>
                                         <td className="px-6 py-4 text-sm text-gray-500 font-mono">
                                             {log.ip_address || "-"}
                                         </td>
@@ -316,6 +339,106 @@ function ActivityLogs() {
                             </button>
                         </div>
                     </div>
+                )}
+            </div>
+
+            {/* Logs Cards - Mobile */}
+            <div className="lg:hidden space-y-3">
+                {loading ? (
+                    <div className="bg-white rounded-xl p-8 text-center text-gray-500">
+                        در حال بارگذاری...
+                    </div>
+                ) : logs.length === 0 ? (
+                    <div className="bg-white rounded-xl p-8 text-center text-gray-500">
+                        هیچ لاگی یافت نشد
+                    </div>
+                ) : (
+                    <>
+                        {logs.map((log) => (
+                            <div key={log.id} className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
+                                <div className="flex items-start justify-between mb-3">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-lg">{getEntityIcon(log.entity_type)}</span>
+                                        <div>
+                                            <div className="font-bold text-gray-900 text-sm">
+                                                {log.username}
+                                            </div>
+                                            <div className="text-xs text-gray-500">
+                                                {new Date(log.created_at).toLocaleString("fa-IR")}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span
+                                        className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getActionColor(
+                                            log.action
+                                        )}`}
+                                    >
+                                        {log.action}
+                                    </span>
+                                </div>
+
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-500">بخش:</span>
+                                        <span className="text-gray-900 font-medium">{log.entity_type}</span>
+                                    </div>
+                                    {log.description && (
+                                        <div className="pt-2 border-t border-gray-100">
+                                            <span className="text-gray-500">توضیحات: </span>
+                                            <span className="text-gray-700">{log.description}</span>
+                                        </div>
+                                    )}
+                                    {log.ip_address && (
+                                        <div className="flex justify-between text-xs">
+                                            <span className="text-gray-500">IP:</span>
+                                            <span className="text-gray-600 font-mono">{log.ip_address}</span>
+                                        </div>
+                                    )}
+                                    {log.device && (
+                                        <div className="flex justify-between text-xs">
+                                            <span className="text-gray-500">دستگاه:</span>
+                                            <span className="text-gray-600">{log.device}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+
+                        {/* Pagination - Mobile */}
+                        {pagination.totalPages > 1 && (
+                            <div className="bg-white rounded-xl p-4 shadow-lg">
+                                <div className="text-sm text-gray-700 text-center mb-3">
+                                    صفحه {pagination.page} از {pagination.totalPages}
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() =>
+                                            setPagination((prev) => ({
+                                                ...prev,
+                                                page: prev.page - 1,
+                                            }))
+                                        }
+                                        disabled={pagination.page === 1}
+                                        className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                                    >
+                                        قبلی
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            setPagination((prev) => ({
+                                                ...prev,
+                                                page: prev.page + 1,
+                                            }))
+                                        }
+                                        disabled={pagination.page === pagination.totalPages}
+                                        className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                                    >
+                                        بعدی
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

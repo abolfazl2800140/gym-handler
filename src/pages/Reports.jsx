@@ -11,6 +11,7 @@ import TrendChart from "../components/TrendChart";
 import ComparisonChart from "../components/ComparisonChart";
 import AdvancedStats from "../components/AdvancedStats";
 import { membersAPI, transactionsAPI } from "../services/api";
+import notification from "../services/notification";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -465,7 +466,7 @@ function Reports() {
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error("خطا در تولید PDF:", error);
-      alert("خطا در تولید فایل PDF");
+      notification.error("خطا در تولید فایل PDF");
     }
   };
 
@@ -551,7 +552,7 @@ function Reports() {
       );
     } catch (error) {
       console.error("خطا در تولید Excel:", error);
-      alert("خطا در تولید فایل Excel");
+      notification.error("خطا در تولید فایل Excel");
     }
   };
 
@@ -561,35 +562,41 @@ function Reports() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+        <h1 className="text-2xl lg:text-3xl font-bold text-black flex items-center gap-2">
           <FaChartBar /> گزارشات پیشرفته
         </h1>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-2 lg:gap-3 w-full lg:w-auto">
           <button
             onClick={handleExportPDF}
-            className="px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-all flex items-center gap-2"
+            className="px-4 lg:px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 active:bg-red-800 transition-all flex items-center justify-center gap-2 text-sm lg:text-base"
           >
-            <FaFilePdf /> PDF نمودارها
+            <FaFilePdf />
+            <span className="hidden sm:inline">PDF نمودارها</span>
+            <span className="sm:hidden">PDF</span>
           </button>
           <button
             onClick={handleExportExcel}
-            className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all flex items-center gap-2"
+            className="px-4 lg:px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 active:bg-green-800 transition-all flex items-center justify-center gap-2 text-sm lg:text-base"
           >
-            <FaFileExcel /> Excel کامل
+            <FaFileExcel />
+            <span className="hidden sm:inline">Excel کامل</span>
+            <span className="sm:hidden">Excel</span>
           </button>
           <button
             onClick={handlePrint}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all flex items-center gap-2"
+            className="px-4 lg:px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 active:bg-blue-800 transition-all flex items-center justify-center gap-2 text-sm lg:text-base"
           >
-            <FaPrint /> چاپ
+            <FaPrint />
+            <span className="hidden sm:inline">چاپ</span>
+            <span className="sm:hidden">چاپ</span>
           </button>
         </div>
       </div>
 
       <DateRangeFilter onFilterChange={handleFilterChange} />
 
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
         <StatCard
           title="تعداد کل اعضا"
           value={members.length}
@@ -616,29 +623,29 @@ function Reports() {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6">
         <AdvancedStats stats={calculateAdvancedStats()} />
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-lg">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 lg:p-6 shadow-lg">
+          <h3 className="text-base lg:text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             <FaChartLine /> مقایسه با ماه قبل
           </h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center p-4 bg-white rounded-lg">
-              <span className="text-gray-700">درآمد ماه جاری</span>
-              <span className="font-bold text-green-600">
+          <div className="space-y-3 lg:space-y-4">
+            <div className="flex justify-between items-center p-3 lg:p-4 bg-white rounded-lg">
+              <span className="text-gray-700 text-sm lg:text-base">درآمد ماه جاری</span>
+              <span className="font-bold text-green-600 text-sm lg:text-base">
                 {formatCurrency(currentIncome)}
               </span>
             </div>
-            <div className="flex justify-between items-center p-4 bg-white rounded-lg">
-              <span className="text-gray-700">درآمد ماه قبل</span>
-              <span className="font-bold text-gray-600">
+            <div className="flex justify-between items-center p-3 lg:p-4 bg-white rounded-lg">
+              <span className="text-gray-700 text-sm lg:text-base">درآمد ماه قبل</span>
+              <span className="font-bold text-gray-600 text-sm lg:text-base">
                 {formatCurrency(lastMonthIncome)}
               </span>
             </div>
-            <div className="flex justify-between items-center p-4 bg-white rounded-lg">
-              <span className="text-gray-700">روند رشد</span>
+            <div className="flex justify-between items-center p-3 lg:p-4 bg-white rounded-lg">
+              <span className="text-gray-700 text-sm lg:text-base">روند رشد</span>
               <span
-                className={`font-bold text-xl ${growthRate >= 0 ? "text-green-600" : "text-red-600"
+                className={`font-bold text-lg lg:text-xl ${growthRate >= 0 ? "text-green-600" : "text-red-600"
                   }`}
               >
                 {growthRate >= 0 ? "↗" : "↘"} {Math.abs(growthRate)}%
@@ -662,12 +669,12 @@ function Reports() {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-6 mb-6">
-        <div className="bg-white rounded-xl p-6 shadow-lg">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6">
+        <div className="bg-white rounded-xl p-4 lg:p-6 shadow-lg">
+          <h3 className="text-base lg:text-lg font-bold text-gray-800 mb-4">
             توزیع نوع اعضا
           </h3>
-          <div className="h-64">
+          <div className="h-56 lg:h-64">
             <Doughnut
               ref={memberTypeChartRef}
               data={memberTypeData}
@@ -676,11 +683,11 @@ function Reports() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
+        <div className="bg-white rounded-xl p-4 lg:p-6 shadow-lg">
+          <h3 className="text-base lg:text-lg font-bold text-gray-800 mb-4">
             توزیع سطح عضویت
           </h3>
-          <div className="h-64">
+          <div className="h-56 lg:h-64">
             <Doughnut
               ref={memberLevelChartRef}
               data={memberLevelData}
@@ -690,12 +697,12 @@ function Reports() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6 mb-6">
-        <div className="bg-white rounded-xl p-6 shadow-lg">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6">
+        <div className="bg-white rounded-xl p-4 lg:p-6 shadow-lg">
+          <h3 className="text-base lg:text-lg font-bold text-gray-800 mb-4">
             درآمد به تفکیک دسته‌بندی
           </h3>
-          <div className="h-64">
+          <div className="h-56 lg:h-64">
             <Doughnut
               ref={incomeChartRef}
               data={incomeByCategory}
@@ -704,11 +711,11 @@ function Reports() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
+        <div className="bg-white rounded-xl p-4 lg:p-6 shadow-lg">
+          <h3 className="text-base lg:text-lg font-bold text-gray-800 mb-4">
             هزینه به تفکیک دسته‌بندی
           </h3>
-          <div className="h-64">
+          <div className="h-56 lg:h-64">
             <Doughnut
               ref={expenseChartRef}
               data={expenseByCategory}

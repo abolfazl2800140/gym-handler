@@ -57,12 +57,12 @@ function AttendanceReport({ attendanceRecords, members, dateRange }) {
     : members;
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-black">گزارش آماری</h2>
+    <div className="bg-white rounded-xl shadow-lg p-4 lg:p-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+        <h2 className="text-lg lg:text-xl font-bold text-black">گزارش آماری</h2>
         <button
           onClick={handleExportToExcel}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2"
+          className="w-full sm:w-auto px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 active:bg-green-800 flex items-center justify-center gap-2 text-sm lg:text-base"
         >
           📥 خروجی Excel
         </button>
@@ -75,7 +75,7 @@ function AttendanceReport({ attendanceRecords, members, dateRange }) {
         <select
           value={selectedMember}
           onChange={(e) => setSelectedMember(e.target.value)}
-          className="w-full px-4 py-2 border text-black rounded-lg"
+          className="w-full px-4 py-3 lg:py-2 border text-black rounded-lg text-base"
         >
           <option value="">همه اعضا</option>
           {members.map((member) => (
@@ -86,7 +86,8 @@ function AttendanceReport({ attendanceRecords, members, dateRange }) {
         </select>
       </div>
 
-      <div className="overflow-x-auto">
+      {/* نمای جدولی - فقط دسکتاپ */}
+      <div className="hidden lg:block overflow-x-auto">
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
@@ -146,6 +147,65 @@ function AttendanceReport({ attendanceRecords, members, dateRange }) {
             })}
           </tbody>
         </table>
+      </div>
+
+      {/* نمای کارتی - فقط موبایل */}
+      <div className="lg:hidden space-y-4">
+        {filteredMembers.map((member) => {
+          const stats = calculateMemberStats(member.id);
+          return (
+            <div
+              key={member.id}
+              className="bg-gray-50 rounded-xl p-4 border border-gray-200"
+            >
+              <h3 className="font-bold text-black text-base mb-3">
+                {member.firstName} {member.lastName}
+              </h3>
+
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <div className="bg-white rounded-lg p-3 text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {stats.present}
+                  </div>
+                  <div className="text-xs text-gray-600 mt-1">حاضر</div>
+                </div>
+                <div className="bg-white rounded-lg p-3 text-center">
+                  <div className="text-2xl font-bold text-red-600">
+                    {stats.absent}
+                  </div>
+                  <div className="text-xs text-gray-600 mt-1">غایب</div>
+                </div>
+                <div className="bg-white rounded-lg p-3 text-center">
+                  <div className="text-2xl font-bold text-yellow-600">
+                    {stats.leave}
+                  </div>
+                  <div className="text-xs text-gray-600 mt-1">مرخصی</div>
+                </div>
+                <div className="bg-white rounded-lg p-3 text-center">
+                  <div className="text-2xl font-bold text-gray-800">
+                    {stats.total}
+                  </div>
+                  <div className="text-xs text-gray-600 mt-1">کل روزها</div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">درصد حضور</span>
+                  <span className="text-lg font-bold text-black">
+                    {stats.percentage}%
+                  </span>
+                </div>
+                <div className="bg-gray-200 rounded-full h-3">
+                  <div
+                    className="bg-green-500 h-3 rounded-full transition-all"
+                    style={{ width: `${stats.percentage}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

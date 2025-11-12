@@ -107,12 +107,13 @@
 }
 
 .form-group input {
-  padding: 12px 16px;
+  padding: 14px 16px;
   border: 2px solid #e2e8f0;
   border-radius: 10px;
   font-size: 16px;
   transition: all 0.3s ease;
   font-family: inherit;
+  min-height: 48px;
 }
 
 .form-group input:focus {
@@ -141,6 +142,7 @@
   justify-content: center;
   gap: 10px;
   margin-top: 10px;
+  min-height: 52px;
 }
 
 .login-button:hover:not(:disabled) {

@@ -78,9 +78,9 @@ function TrendChart({ data, title }) {
   };
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-lg">
-      <h3 className="text-lg font-bold text-gray-800 mb-4">{title}</h3>
-      <div className="h-80">
+    <div className="bg-white rounded-xl p-4 lg:p-6 shadow-lg">
+      <h3 className="text-base lg:text-lg font-bold text-gray-800 mb-4">{title}</h3>
+      <div className="h-64 lg:h-80">
         <Line data={data} options={options} />
       </div>
     </div>

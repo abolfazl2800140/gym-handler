@@ -85,20 +85,20 @@ function AIAssistant() {
     };
 
     return (
-        <div className="h-[calc(100vh-100px)] flex flex-col">
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+        <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-100px)] flex flex-col">
+            <div className="mb-4 lg:mb-6">
+                <h1 className="text-2xl lg:text-3xl font-bold text-black flex items-center gap-2">
                     <FaRobot /> دستیار هوشمند
                 </h1>
-                <p className="text-gray-600 mt-2">
+                <p className="text-gray-600 mt-2 text-sm lg:text-base">
                     از هوش مصنوعی درباره باشگاه خود سوال بپرسید
                 </p>
             </div>
 
             {/* Suggestions */}
             {messages.length === 1 && (
-                <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                <div className="mb-3 lg:mb-4">
+                    <h3 className="text-xs lg:text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                         <FaLightbulb /> سوالات پیشنهادی:
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -106,7 +106,7 @@ function AIAssistant() {
                             <button
                                 key={index}
                                 onClick={() => handleSuggestionClick(suggestion)}
-                                className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm hover:bg-blue-100 transition-colors"
+                                className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-xs lg:text-sm hover:bg-blue-100 active:bg-blue-200 transition-colors"
                             >
                                 {suggestion}
                             </button>
@@ -117,7 +117,7 @@ function AIAssistant() {
 
             {/* Messages */}
             <div className="flex-1 bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
-                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                <div className="flex-1 overflow-y-auto p-3 lg:p-6 space-y-3 lg:space-y-4">
                     {messages.map((message, index) => (
                         <div
                             key={index}
@@ -125,14 +125,14 @@ function AIAssistant() {
                                 }`}
                         >
                             <div
-                                className={`max-w-[80%] rounded-lg p-4 ${message.type === "user"
+                                className={`max-w-[85%] lg:max-w-[80%] rounded-lg p-3 lg:p-4 ${message.type === "user"
                                         ? "bg-indigo-600 text-white"
                                         : message.type === "error"
                                             ? "bg-red-50 text-red-800 border border-red-200"
                                             : "bg-gray-100 text-gray-800"
                                     }`}
                             >
-                                <div className="whitespace-pre-wrap">{message.content}</div>
+                                <div className="whitespace-pre-wrap text-sm lg:text-base">{message.content}</div>
                                 <div
                                     className={`text-xs mt-2 ${message.type === "user"
                                             ? "text-indigo-200"
@@ -172,7 +172,7 @@ function AIAssistant() {
                 {/* Input */}
                 <form
                     onSubmit={handleSubmit}
-                    className="border-t border-gray-200 p-4 bg-gray-50"
+                    className="border-t border-gray-200 p-3 lg:p-4 bg-gray-50"
                 >
                     <div className="flex gap-2">
                         <input
@@ -181,14 +181,21 @@ function AIAssistant() {
                             onChange={(e) => setInputValue(e.target.value)}
                             placeholder="سوال خود را بپرسید..."
                             disabled={loading}
-                            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100"
+                            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 text-base"
                         />
                         <button
                             type="submit"
                             disabled={loading || !inputValue.trim()}
-                            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            className="px-4 lg:px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 active:bg-indigo-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[80px] lg:min-w-[100px]"
                         >
-                            {loading ? "..." : <><FaPaperPlane /> ارسال</>}
+                            {loading ? (
+                                <span className="text-sm lg:text-base">...</span>
+                            ) : (
+                                <>
+                                    <FaPaperPlane />
+                                    <span className="hidden sm:inline">ارسال</span>
+                                </>
+                            )}
                         </button>
                     </div>
                 </form>

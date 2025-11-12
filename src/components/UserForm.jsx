@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { usersAPI } from '../services/api';
 import { userManager } from '../services/auth';
+import notification from '../services/notification';
 import '../styles/UserForm.css';
 
 function UserForm({ user, onClose, onSuccess }) {
@@ -67,7 +68,7 @@ function UserForm({ user, onClose, onSuccess }) {
       }
 
       if (response.success) {
-        alert(isEditing ? 'ادمین با موفقیت ویرایش شد' : 'ادمین با موفقیت اضافه شد');
+        notification.success(isEditing ? 'ادمین با موفقیت ویرایش شد' : 'ادمین با موفقیت اضافه شد');
         onSuccess();
       }
     } catch (err) {

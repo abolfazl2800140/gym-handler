@@ -25,15 +25,23 @@
 }
 
 .forbidden-icon {
-  width: 120px;
-  height: 120px;
-  margin: 0 auto 30px;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   animation: pulse 2s ease-in-out infinite;
+}
+
+@media (min-width: 640px) {
+  .forbidden-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+  }
 }
 
 @keyframes pulse {
@@ -46,40 +54,77 @@
 }
 
 .forbidden-icon svg {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
+}
+
+@media (min-width: 640px) {
+  .forbidden-icon svg {
+    width: 60px;
+    height: 60px;
+  }
 }
 
 .forbidden-content h1 {
-  font-size: 80px;
+  font-size: 64px;
   font-weight: 900;
   margin: 0 0 10px 0;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
+@media (min-width: 640px) {
+  .forbidden-content h1 {
+    font-size: 80px;
+  }
+}
+
 .forbidden-content h2 {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
-  margin: 0 0 20px 0;
+  margin: 0 0 16px 0;
+}
+
+@media (min-width: 640px) {
+  .forbidden-content h2 {
+    font-size: 32px;
+    margin: 0 0 20px 0;
+  }
 }
 
 .forbidden-content p {
-  font-size: 18px;
-  margin: 0 0 40px 0;
+  font-size: 16px;
+  margin: 0 0 32px 0;
   opacity: 0.9;
+  padding: 0 20px;
+}
+
+@media (min-width: 640px) {
+  .forbidden-content p {
+    font-size: 18px;
+    margin: 0 0 40px 0;
+    padding: 0;
+  }
 }
 
 .back-button {
-  padding: 14px 32px;
+  padding: 14px 28px;
   background: white;
   color: #667eea;
   border: none;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  min-height: 48px;
+}
+
+@media (min-width: 640px) {
+  .back-button {
+    padding: 14px 32px;
+    font-size: 16px;
+  }
 }
 
 .back-button:hover {

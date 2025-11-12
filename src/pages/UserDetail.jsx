@@ -8,9 +8,11 @@ import {
 } from 'react-icons/fa';
 import { usersAPI } from '../services/api';
 import { userManager } from '../services/auth';
+import notification from '../services/notification';
 import UserForm from '../components/UserForm';
 import ChangePasswordForm from '../components/ChangePasswordForm';
 import ConfirmDialog from '../components/ConfirmDialog';
+import '../styles/MemberProfile.css';
 import '../styles/UserDetail.css';
 
 function UserDetail() {
@@ -45,7 +47,7 @@ function UserDetail() {
       if (activitiesRes.success) setActivities(activitiesRes.activities);
     } catch (error) {
       console.error('Error fetching user data:', error);
-      alert('خطا در دریافت اطلاعات');
+      notification.error('خطا در دریافت اطلاعات');
       navigate('/users');
     } finally {
       setLoading(false);
@@ -53,18 +55,21 @@ function UserDetail() {
   };
 
   const handleToggleStatus = async () => {
-    if (!confirm(`آیا مطمئن هستید که می‌خواهید این حساب را ${user.is_active ? 'غیرفعال' : 'فعال'} کنید؟`)) {
-      return;
-    }
+    const result = await notification.confirm(
+      `آیا مطمئن هستید که می‌خواهید این حساب را ${user.is_active ? 'غیرفعال' : 'فعال'} کنید؟`,
+      'تغییر وضعیت حساب'
+    );
+    
+    if (!result.isConfirmed) return;
 
     try {
       const response = await usersAPI.toggleStatus(id);
       if (response.success) {
-        alert(response.message);
+        notification.success(response.message);
         fetchUserData();
       }
     } catch (error) {
-      alert(error.message || 'خطا در تغییر وضعیت');
+      notification.error(error.message || 'خطا در تغییر وضعیت');
     }
   };
 
@@ -72,11 +77,11 @@ function UserDetail() {
     try {
       const response = await usersAPI.delete(id);
       if (response.success) {
-        alert('ادمین با موفقیت حذف شد');
+        notification.success('ادمین با موفقیت حذف شد');
         navigate('/users');
       }
     } catch (error) {
-      alert(error.message || 'خطا در حذف ادمین');
+      notification.error(error.message || 'خطا در حذف ادمین');
     } finally {
       setShowDeleteDialog(false);
     }
@@ -166,15 +171,15 @@ function UserDetail() {
   const badge = getRoleBadge(user.role);
 
   return (
-    <div className="user-detail-page">
+    <div className="member-profile-page user-detail-page">
       {/* دکمه بازگشت */}
       <button onClick={() => navigate('/users')} className="back-button">
         <FaArrowLeft /> بازگشت به لیست
       </button>
 
       {/* هدر */}
-      <div className="user-header">
-        <div className="user-header-content">
+      <div className="member-header">
+        <div className="member-header-content">
           <div className="user-avatar-xl">
             {user.avatar_url ? (
               <img src={user.avatar_url} alt={user.username} />
@@ -182,13 +187,13 @@ function UserDetail() {
               <span>{getInitials()}</span>
             )}
           </div>
-          <div className="user-header-info">
+          <div className="member-header-info">
             <h1>
               {user.first_name && user.last_name ? 
                 `${user.first_name} ${user.last_name}` : 
                 user.username}
             </h1>
-            <p className="username">@{user.username}</p>
+            <p className="phone">@{user.username} • شناسه: {user.id}</p>
             <div className="badges">
               <span className={`role-badge ${badge.class}`}>
                 {badge.icon} {badge.text}
@@ -201,7 +206,7 @@ function UserDetail() {
         </div>
         
         {isSuperAdmin && (
-          <div className="user-actions">
+          <div className="member-actions">
             <button onClick={() => setShowEditForm(true)} className="btn-action edit">
               <FaEdit /> ویرایش
             </button>

@@ -44,12 +44,12 @@ function DateRangeFilter({ onFilterChange }) {
   };
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
-      <h3 className="text-lg font-bold text-gray-800 mb-4">
+    <div className="bg-white rounded-xl p-4 lg:p-6 shadow-lg mb-6">
+      <h3 className="text-base lg:text-lg font-bold text-gray-800 mb-4">
         🗓️ فیلتر بازه زمانی
       </h3>
 
-      <div className="flex gap-4 items-end">
+      <div className="flex flex-col lg:flex-row gap-3 lg:gap-4 items-stretch lg:items-end">
         <div className="flex-1">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             نوع گزارش
@@ -57,7 +57,7 @@ function DateRangeFilter({ onFilterChange }) {
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="w-full px-4 text-black py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 text-black py-3 lg:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-base"
           >
             <option value="month">ماهانه</option>
             <option value="year">سالانه</option>
@@ -73,7 +73,7 @@ function DateRangeFilter({ onFilterChange }) {
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 lg:py-2 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-base"
             >
               {persianYears.map((year) => (
                 <option key={year} value={year}>
@@ -92,7 +92,7 @@ function DateRangeFilter({ onFilterChange }) {
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(Number(e.target.value))}
-              className="w-full px-4 py-2 text-black border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 lg:py-2 text-black border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-base"
             >
               {persianMonths.map((month, index) => (
                 <option key={index} value={index + 1}>
@@ -105,7 +105,7 @@ function DateRangeFilter({ onFilterChange }) {
 
         <button
           onClick={handleApplyFilter}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all"
+          className="px-6 py-3 lg:py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 active:bg-blue-800 transition-all text-sm lg:text-base min-h-[44px] lg:min-h-0"
         >
           اعمال فیلتر
         </button>

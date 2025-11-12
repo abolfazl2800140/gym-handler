@@ -2,20 +2,22 @@ const express = require('express');
 const router = express.Router();
 const usersController = require('../controllers/usersController');
 const { authenticateToken, requireSuperAdmin } = require('../middleware/auth');
+const genderFilter = require('../middleware/genderFilter');
+const { checkCapacityBeforeCreate } = require('../middleware/checkIdCapacity');
 
 // همه route ها نیاز به احراز هویت دارند
 router.use(authenticateToken);
 
 // GET /api/users - دریافت لیست کاربران
 // Super Admin: همه کاربران
-// Admin: فقط خودش
-router.get('/', usersController.getAllUsers);
+// Admin: فقط ادمین‌های هم‌جنس
+router.get('/', genderFilter, usersController.getAllUsers);
 
 // GET /api/users/:id - دریافت یک کاربر
-router.get('/:id', usersController.getUserById);
+router.get('/:id', genderFilter, usersController.getUserById);
 
 // POST /api/users - اضافه کردن کاربر جدید (فقط super_admin)
-router.post('/', requireSuperAdmin, usersController.createUser);
+router.post('/', requireSuperAdmin, checkCapacityBeforeCreate('users'), usersController.createUser);
 
 // PUT /api/users/:id - ویرایش کاربر
 // Super Admin: همه کاربران

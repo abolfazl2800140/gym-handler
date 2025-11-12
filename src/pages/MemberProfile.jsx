@@ -6,6 +6,7 @@ import {
   FaTimes, FaDollarSign, FaChartBar, FaCalendarAlt, FaCheckCircle, FaTimesCircle 
 } from 'react-icons/fa';
 import { membersAPI, transactionsAPI, attendanceAPI } from '../services/api';
+import notification from '../services/notification';
 import MemberAvatar from '../components/MemberAvatar';
 import MemberBadge from '../components/MemberBadge';
 import MemberForm from '../components/MemberForm';
@@ -41,9 +42,13 @@ function MemberProfile() {
       }
 
       // دریافت تراکنش‌های عضو
-      const transactionsRes = await transactionsAPI.getAll({ member_id: id });
+      const transactionsRes = await transactionsAPI.getAll();
       if (transactionsRes.success) {
-        setTransactions(transactionsRes.data);
+        // فیلتر کردن تراکنش‌های مربوط به این عضو
+        const memberTransactions = transactionsRes.data.filter(
+          t => t.memberId === parseInt(id) || t.member_id === parseInt(id)
+        );
+        setTransactions(memberTransactions);
       }
 
       // دریافت آمار حضور و غیاب
@@ -54,7 +59,7 @@ function MemberProfile() {
 
     } catch (error) {
       console.error('Error fetching member data:', error);
-      alert('خطا در دریافت اطلاعات');
+      notification.error('خطا در دریافت اطلاعات');
       navigate('/members');
     } finally {
       setLoading(false);
@@ -64,10 +69,10 @@ function MemberProfile() {
   const handleDelete = async () => {
     try {
       await membersAPI.delete(id);
-      alert('عضو با موفقیت حذف شد');
+      notification.success('عضو با موفقیت حذف شد');
       navigate('/members');
     } catch (error) {
-      alert(error.message || 'خطا در حذف عضو');
+      notification.error(error.message || 'خطا در حذف عضو');
     } finally {
       setShowDeleteDialog(false);
     }
@@ -76,22 +81,22 @@ function MemberProfile() {
   const handleSaveMember = async (formData) => {
     try {
       await membersAPI.update(id, formData);
-      alert('اطلاعات با موفقیت به‌روزرسانی شد');
+      notification.success('اطلاعات با موفقیت به‌روزرسانی شد');
       setShowEditForm(false);
       fetchMemberData();
     } catch (error) {
-      alert(error.message || 'خطا در به‌روزرسانی اطلاعات');
+      notification.error(error.message || 'خطا در به‌روزرسانی اطلاعات');
     }
   };
 
   const handleSaveTransaction = async (formData) => {
     try {
       await transactionsAPI.create({ ...formData, member_id: id });
-      alert('تراکنش با موفقیت ثبت شد');
+      notification.success('تراکنش با موفقیت ثبت شد');
       setShowTransactionForm(false);
       fetchMemberData();
     } catch (error) {
-      alert(error.message || 'خطا در ثبت تراکنش');
+      notification.error(error.message || 'خطا در ثبت تراکنش');
     }
   };
 
@@ -161,7 +166,7 @@ function MemberProfile() {
           />
           <div className="member-header-info">
             <h1>{member.firstName} {member.lastName}</h1>
-            <p className="phone">{member.phone}</p>
+            <p className="phone">{member.phone} • شناسه: {member.id}</p>
             <div className="badges">
               <MemberBadge type={member.memberType} variant="type" />
               <MemberBadge type={member.membershipLevel} variant="level" />

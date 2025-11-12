@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { NavLink } from "react-router-dom";
 import { authService, userManager } from "../services/auth";
-import { FaUserShield, FaUser, FaUsers, FaClipboardList, FaMoneyBillWave, FaChartBar, FaRobot, FaScroll, FaDoorOpen, FaKey, FaUserTie } from "react-icons/fa";
+import { FaUserShield, FaUser, FaUsers, FaClipboardList, FaMoneyBillWave, FaChartBar, FaRobot, FaScroll, FaDoorOpen, FaKey, FaUserTie, FaBars, FaTimes } from "react-icons/fa";
 import ConfirmDialog from "./ConfirmDialog";
 import "./Sidebar.css";
 
@@ -10,23 +10,54 @@ function Sidebar() {
   const user = userManager.getUser();
   const isSuperAdmin = userManager.isSuperAdmin();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogoutClick = () => {
     setShowLogoutDialog(true);
   };
 
-  const handleConfirmLogout = () => {
-    authService.logout();
-    setShowLogoutDialog(false);
+  const handleConfirmLogout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setShowLogoutDialog(false);
+    }
   };
 
   const handleCancelLogout = () => {
     setShowLogoutDialog(false);
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <>
-      <aside className="sidebar">
+      {/* دکمه همبرگر - فقط در موبایل */}
+      <button 
+        onClick={toggleMobileMenu}
+        className="mobile-menu-button"
+        aria-label="منو"
+      >
+        {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+      </button>
+
+      {/* Overlay - فقط در موبایل */}
+      {isMobileMenuOpen && (
+        <div 
+          className="mobile-overlay"
+          onClick={closeMobileMenu}
+        />
+      )}
+
+      <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         {/* اطلاعات کاربر */}
         <div className="sidebar-user">
           <div className="user-avatar">
@@ -58,6 +89,7 @@ function Sidebar() {
           <NavLink
             to="/users"
             className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMobileMenu}
           >
             <span className="icon"><FaUserShield /></span>
             <span>مدیریت ادمین‌ها</span>
@@ -65,6 +97,7 @@ function Sidebar() {
           <NavLink
             to="/members"
             className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMobileMenu}
           >
             <span className="icon"><FaUsers /></span>
             <span>اعضا</span>
@@ -72,6 +105,7 @@ function Sidebar() {
           <NavLink
             to="/attendance"
             className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMobileMenu}
           >
             <span className="icon"><FaClipboardList /></span>
             <span>حضور و غیاب</span>
@@ -79,6 +113,7 @@ function Sidebar() {
           <NavLink
             to="/financial"
             className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMobileMenu}
           >
             <span className="icon"><FaMoneyBillWave /></span>
             <span>مالی</span>
@@ -86,6 +121,7 @@ function Sidebar() {
           <NavLink
             to="/reports"
             className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMobileMenu}
           >
             <span className="icon"><FaChartBar /></span>
             <span>گزارشات</span>
@@ -93,6 +129,7 @@ function Sidebar() {
           <NavLink
             to="/ai"
             className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMobileMenu}
           >
             <span className="icon"><FaRobot /></span>
             <span>دستیار هوشمند</span>
@@ -103,6 +140,7 @@ function Sidebar() {
             <NavLink
               to="/activity-logs"
               className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={closeMobileMenu}
             >
               <span className="icon"><FaScroll /></span>
               <span>لاگ فعالیت‌ها</span>

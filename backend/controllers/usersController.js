@@ -4,11 +4,12 @@ const bcrypt = require('bcryptjs');
 /**
  * GET /api/users - دریافت لیست کاربران
  * Super Admin: همه کاربران
- * Admin: فقط خودش
+ * Admin: فقط ادمین‌های هم‌جنس
  */
 exports.getAllUsers = async (req, res) => {
   try {
     const currentUser = req.user;
+    const genderFilter = req.genderFilter; // از middleware
     let query;
     let params = [];
 
@@ -25,16 +26,17 @@ exports.getAllUsers = async (req, res) => {
       `;
       params = [currentUser.id];
     } else {
-      // Admin فقط خودش رو می‌بینه
+      // Admin فقط ادمین‌های هم‌جنس رو می‌بینه (به جز خودش)
       query = `
         SELECT id, username, email, first_name, last_name, phone, 
                avatar_url, role,
                COALESCE(gender, 'مرد') as gender,
                is_active, created_at, updated_at
         FROM users
-        WHERE id = $1
+        WHERE id != $1 AND COALESCE(gender, 'مرد') = $2
+        ORDER BY created_at DESC
       `;
-      params = [currentUser.id];
+      params = [currentUser.id, genderFilter];
     }
 
     const result = await db.query(query, params);
@@ -60,29 +62,30 @@ exports.getUserById = async (req, res) => {
   try {
     const { id } = req.params;
     const currentUser = req.user;
+    const genderFilter = req.genderFilter; // از middleware
 
-    // بررسی دسترسی: admin فقط خودش، super_admin همه
-    if (currentUser.role !== 'super_admin' && currentUser.id !== parseInt(id)) {
-      return res.status(403).json({
-        success: false,
-        error: 'شما دسترسی لازم برای مشاهده این کاربر را ندارید'
-      });
+    let query = `
+      SELECT id, username, email, first_name, last_name, phone, 
+             avatar_url, role, 
+             COALESCE(gender, 'مرد') as gender,
+             is_active, created_at, updated_at
+      FROM users
+      WHERE id = $1
+    `;
+    const params = [id];
+
+    // اگر admin باشه، فقط هم‌جنس‌ها رو می‌تونه ببینه
+    if (genderFilter) {
+      query += ' AND COALESCE(gender, $2) = $2';
+      params.push(genderFilter);
     }
 
-    const result = await db.query(
-      `SELECT id, username, email, first_name, last_name, phone, 
-              avatar_url, role, 
-              COALESCE(gender, 'مرد') as gender,
-              is_active, created_at, updated_at
-       FROM users
-       WHERE id = $1`,
-      [id]
-    );
+    const result = await db.query(query, params);
 
     if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,
-        error: 'کاربر یافت نشد'
+        error: genderFilter ? 'شما دسترسی به این کاربر ندارید' : 'کاربر یافت نشد'
       });
     }
 
@@ -258,12 +261,20 @@ exports.deleteUser = async (req, res) => {
       });
     }
 
+    const userToDelete = userCheck.rows[0];
+
     // حذف کاربر
     await db.query('DELETE FROM users WHERE id = $1', [id]);
 
     res.json({
       success: true,
-      message: 'کاربر با موفقیت حذف شد'
+      message: 'کاربر با موفقیت حذف شد',
+      deletedUser: {
+        username: userToDelete.username,
+        email: userToDelete.email,
+        role: userToDelete.role,
+        id: userToDelete.id
+      }
     });
   } catch (error) {
     console.error('Error in deleteUser:', error);

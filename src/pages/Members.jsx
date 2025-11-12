@@ -213,12 +213,13 @@ function Members() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+        <h1 className="text-2xl lg:text-3xl font-bold flex items-center gap-2">
           <FaUsers /> مدیریت اعضا
         </h1>
-        <div className="flex gap-3">
-          <div className="flex bg-white/10 backdrop-blur-lg rounded-lg p-1">
+        <div className="flex gap-3 w-full lg:w-auto">
+          {/* دکمه‌های تغییر نما - فقط در دسکتاپ */}
+          <div className="hidden lg:flex bg-white/10 backdrop-blur-lg rounded-lg p-1">
             <button
               onClick={() => setViewMode("table")}
               className={`px-4 py-2 rounded-md transition-all ${
@@ -246,10 +247,11 @@ function Members() {
           <button
             onClick={handleAddMember}
             disabled={loading}
-            className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold transition-all disabled:opacity-50 flex items-center gap-2 hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(72,187,120,0.3)]"
+            className="flex-1 lg:flex-none px-4 lg:px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold transition-all disabled:opacity-50 flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(72,187,120,0.3)] text-sm lg:text-base"
           >
             <FaPlus />
-            افزودن عضو جدید
+            <span className="hidden sm:inline">افزودن عضو جدید</span>
+            <span className="sm:hidden">افزودن عضو</span>
           </button>
         </div>
       </div>
@@ -275,13 +277,19 @@ function Members() {
         onStatusChange={setStatusFilter}
       />
 
+      {/* نمای جدولی - در موبایل مخفی، در دسکتاپ بر اساس انتخاب کاربر */}
       {viewMode === "table" && (
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col" style={{ height: 'calc(100vh - 200px)' }}>
+        <div className="hidden lg:block bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 flex flex-col" style={{ height: 'calc(100vh - 280px)' }}>
           {/* جدول با header ثابت */}
           <div className="overflow-auto flex-1">
-            <table className="w-full">
+            <table className="w-full min-w-[1000px]">
               <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200 sticky top-0 z-10">
               <tr>
+                <th className="px-6 py-4 text-gray-700 text-right text-sm font-semibold">
+                  <div className="flex items-center gap-2">
+                    <FaTag /> شناسه
+                  </div>
+                </th>
                 <th 
                   className="px-6 py-4 text-gray-700 text-right text-sm font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
                   onClick={() => handleSort('name')}
@@ -350,6 +358,11 @@ function Members() {
                   } hover:bg-blue-50 hover:shadow-md`}
                   onClick={() => navigate(`/members/${member.id}`)}
                 >
+                  <td className="px-6 py-4">
+                    <span className="text-gray-600 font-bold text-sm">
+                      #{member.id}
+                    </span>
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <MemberAvatar
@@ -423,86 +436,92 @@ function Members() {
 
           {/* Pagination داخل جدول */}
           {filteredAndSortedMembers.length > 0 && (
-            <div className="flex justify-start items-center gap-2 p-4 bg-gray-50 border-t border-gray-200">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            قبلی
-          </button>
-          
-          <div className="flex gap-1">
-            {[...Array(totalPages)].map((_, index) => {
-              const page = index + 1;
-              if (
-                page === 1 ||
-                page === totalPages ||
-                (page >= currentPage - 1 && page <= currentPage + 1)
-              ) {
-                return (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      currentPage === page
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    {page}
-                  </button>
-                );
-              } else if (page === currentPage - 2 || page === currentPage + 2) {
-                return <span key={page} className="px-2 py-2 text-gray-400">...</span>;
-              }
-              return null;
-            })}
-          </div>
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 p-4 bg-gray-50 border-t border-gray-200">
+              <div className="text-sm text-gray-600">
+                نمایش {((currentPage - 1) * itemsPerPage) + 1} تا {Math.min(currentPage * itemsPerPage, filteredAndSortedMembers.length)} از {filteredAndSortedMembers.length} عضو
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-3 lg:px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+                >
+                  قبلی
+                </button>
+                
+                <div className="flex gap-1">
+                  {[...Array(totalPages)].map((_, index) => {
+                    const page = index + 1;
+                    if (
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 1 && page <= currentPage + 1)
+                    ) {
+                      return (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`px-3 lg:px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
+                            currentPage === page
+                              ? 'bg-blue-500 text-white'
+                              : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      );
+                    } else if (page === currentPage - 2 || page === currentPage + 2) {
+                      return <span key={page} className="px-2 py-2 text-gray-400 text-sm">...</span>;
+                    }
+                    return null;
+                  })}
+                </div>
 
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            بعدی
-          </button>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 lg:px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+                >
+                  بعدی
+                </button>
+              </div>
             </div>
           )}
         </div>
       )}
 
-      {viewMode === "card" && (
-        <div className="overflow-auto" style={{ height: 'calc(100vh - 160px)' }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
+      {/* نمای کارتی - در موبایل همیشه نمایش، در دسکتاپ بر اساس انتخاب کاربر */}
+      <div className={`${viewMode === "card" ? "block" : "lg:hidden"} overflow-auto`} style={{ height: 'calc(100vh - 240px)' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 pb-4">
             {filteredAndSortedMembers.map((member) => (
             <div
               key={member.id}
               onClick={() => navigate(`/members/${member.id}`)}
-              className="member-card rounded-xl p-6 cursor-pointer group"
+              className="member-card rounded-xl p-4 lg:p-6 cursor-pointer group"
             >
-              <div className="member-card-header flex items-center gap-4 mb-4">
+              <div className="member-card-header flex items-center gap-3 lg:gap-4 mb-3 lg:mb-4">
                 <MemberAvatar
                   firstName={member.firstName}
                   lastName={member.lastName}
                   size="lg"
                 />
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base lg:text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors truncate">
                     {member.firstName} {member.lastName}
                   </h3>
-                  <p className="text-sm text-gray-600">{member.phone}</p>
+                  <p className="text-xs lg:text-sm text-gray-600 truncate">{member.phone} • #{member.id}</p>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex flex-wrap gap-2 mb-3 lg:mb-4">
                 <MemberBadge type={member.memberType} variant="type" />
                 <MemberBadge type={member.membershipLevel} variant="level" />
                 <MemberBadge type={member.subscriptionStatus} variant="status" />
               </div>
 
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-sm">
+              <div className="space-y-2 mb-3 lg:mb-4">
+                <div className="flex justify-between text-xs lg:text-sm">
                   <span className="text-gray-500">تاریخ عضویت:</span>
                   <span className="text-gray-800 font-medium">
                     {new Date(member.joinDate).toLocaleDateString("fa-IR")}
@@ -510,13 +529,13 @@ function Members() {
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-4 border-t border-gray-200">
+              <div className="flex gap-2 pt-3 lg:pt-4 border-t border-gray-200">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleEditMember(member);
                   }}
-                  className="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 px-3 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:bg-blue-700 text-xs lg:text-sm font-medium transition-colors flex items-center justify-center gap-2 touch-manipulation"
                 >
                   <FaEdit /> ویرایش
                 </button>
@@ -525,7 +544,7 @@ function Members() {
                     e.stopPropagation();
                     handleDeleteClick(member.id);
                   }}
-                  className="flex-1 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 px-3 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 active:bg-red-700 text-xs lg:text-sm font-medium transition-colors flex items-center justify-center gap-2 touch-manipulation"
                 >
                   <FaTrash /> حذف
                 </button>
@@ -540,9 +559,8 @@ function Members() {
               <p className="text-gray-400 text-sm mt-2">لطفاً فیلترها را تغییر دهید یا عضو جدیدی اضافه کنید</p>
             </div>
           )}
-          </div>
         </div>
-      )}
+      </div>
 
       {showForm && (
         <MemberForm
