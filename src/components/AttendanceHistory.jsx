@@ -29,14 +29,14 @@ function AttendanceHistory({ attendanceRecords, members, onEdit, onDelete }) {
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-      <div className="p-6 border-b">
-        <h2 className="text-xl font-bold text-black mb-4">تاریخچه حضور و غیاب</h2>
+      <div className="p-4 lg:p-6 border-b">
+        <h2 className="text-lg lg:text-xl font-bold text-black mb-4">تاریخچه حضور و غیاب</h2>
         <input
           type="text"
           placeholder="جستجوی تاریخ..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg"
+          className="w-full px-4 py-3 lg:py-2 border rounded-lg text-base"
         />
       </div>
 
@@ -48,16 +48,16 @@ function AttendanceHistory({ attendanceRecords, members, onEdit, onDelete }) {
           return (
             <div key={record.date} className="p-4 hover:bg-gray-50">
               <div
-                className="flex items-center justify-between cursor-pointer"
+                className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 cursor-pointer"
                 onClick={() =>
                   setExpandedDate(isExpanded ? null : record.date)
                 }
               >
-                <div className="flex-1">
-                  <div className="font-bold text-black">
+                <div className="flex-1 w-full lg:w-auto">
+                  <div className="font-bold text-black text-base lg:text-base">
                     {new Date(record.date).toLocaleDateString("fa-IR")}
                   </div>
-                  <div className="flex gap-4 mt-2 text-sm">
+                  <div className="flex flex-wrap gap-3 lg:gap-4 mt-2 text-xs lg:text-sm">
                     <span className="text-green-600">
                       ✓ {stats.present} حاضر
                     </span>
@@ -67,19 +67,19 @@ function AttendanceHistory({ attendanceRecords, members, onEdit, onDelete }) {
                     </span>
                   </div>
                   {record.notes && (
-                    <div className="text-sm text-gray-600 mt-2">
+                    <div className="text-xs lg:text-sm text-gray-600 mt-2">
                       📝 {record.notes}
                     </div>
                   )}
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full lg:w-auto">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onEdit(record);
                     }}
-                    className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                    className="flex-1 lg:flex-none px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 text-xs lg:text-sm"
                   >
                     ویرایش
                   </button>
@@ -88,11 +88,11 @@ function AttendanceHistory({ attendanceRecords, members, onEdit, onDelete }) {
                       e.stopPropagation();
                       onDelete(record.date);
                     }}
-                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
+                    className="flex-1 lg:flex-none px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 active:bg-red-700 text-xs lg:text-sm"
                   >
                     حذف
                   </button>
-                  <button className="px-3 py-1 bg-gray-200 rounded text-sm">
+                  <button className="px-3 py-2 bg-gray-200 rounded text-xs lg:text-sm">
                     {isExpanded ? "▲" : "▼"}
                   </button>
                 </div>

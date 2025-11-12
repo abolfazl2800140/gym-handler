@@ -189,26 +189,28 @@ function Attendance() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+        <h1 className="text-2xl lg:text-3xl font-bold text-black flex items-center gap-2">
           <FaClipboardList /> حضور و غیاب
         </h1>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
           <SimplePersianDatePicker
             value={selectedDate}
             onChange={(date) => setSelectedDate(date)}
-            className="px-4 py-2 border text-black rounded-lg"
+            className="px-4 py-3 lg:py-2 border text-black rounded-lg text-base w-full sm:w-auto"
           />
           <button
             onClick={() => handleOpenForm(selectedDate)}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all flex items-center gap-2"
+            className="px-4 lg:px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 active:bg-indigo-800 transition-all flex items-center justify-center gap-2 text-sm lg:text-base"
           >
-            <FaPlus /> ثبت حضور و غیاب
+            <FaPlus />
+            <span className="hidden sm:inline">ثبت حضور و غیاب</span>
+            <span className="sm:hidden">ثبت حضور</span>
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
         <StatCard
           title="حاضر امروز"
           value={todayStats.present}
@@ -238,10 +240,10 @@ function Attendance() {
         />
       </div>
 
-      <div className="mb-6 flex gap-3 border-b">
+      <div className="mb-6 flex gap-2 lg:gap-3 border-b overflow-x-auto">
         <button
           onClick={() => setActiveTab("today")}
-          className={`px-6 py-3 font-medium transition-all ${activeTab === "today"
+          className={`px-4 lg:px-6 py-3 font-medium transition-all whitespace-nowrap text-sm lg:text-base ${activeTab === "today"
             ? "border-b-2 border-indigo-600 text-indigo-600"
             : "text-gray-600 hover:text-gray-900"
             }`}
@@ -250,7 +252,7 @@ function Attendance() {
         </button>
         <button
           onClick={() => setActiveTab("history")}
-          className={`px-6 py-3 font-medium transition-all ${activeTab === "history"
+          className={`px-4 lg:px-6 py-3 font-medium transition-all whitespace-nowrap text-sm lg:text-base ${activeTab === "history"
             ? "border-b-2 border-indigo-600 text-indigo-600"
             : "text-gray-600 hover:text-gray-900"
             }`}
@@ -259,7 +261,7 @@ function Attendance() {
         </button>
         <button
           onClick={() => setActiveTab("report")}
-          className={`px-6 py-3 font-medium transition-all ${activeTab === "report"
+          className={`px-4 lg:px-6 py-3 font-medium transition-all whitespace-nowrap text-sm lg:text-base ${activeTab === "report"
             ? "border-b-2 border-indigo-600 text-indigo-600"
             : "text-gray-600 hover:text-gray-900"
             }`}
@@ -269,31 +271,31 @@ function Attendance() {
       </div>
 
       {activeTab === "today" && (
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold text-black mb-4">
+        <div className="bg-white rounded-xl shadow-lg p-4 lg:p-6">
+          <h2 className="text-lg lg:text-xl font-bold text-black mb-4">
             وضعیت امروز - {new Date().toLocaleDateString("fa-IR")}
           </h2>
 
           {getTodayRecord() ? (
             <div>
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="bg-green-50 rounded-lg p-4">
-                  <div className="text-green-600 font-bold text-2xl">
+              <div className="grid grid-cols-3 gap-3 lg:gap-4 mb-6">
+                <div className="bg-green-50 rounded-lg p-3 lg:p-4">
+                  <div className="text-green-600 font-bold text-xl lg:text-2xl">
                     {todayStats.present}
                   </div>
-                  <div className="text-gray-600 text-sm">حاضر</div>
+                  <div className="text-gray-600 text-xs lg:text-sm">حاضر</div>
                 </div>
-                <div className="bg-red-50 rounded-lg p-4">
-                  <div className="text-red-600 font-bold text-2xl">
+                <div className="bg-red-50 rounded-lg p-3 lg:p-4">
+                  <div className="text-red-600 font-bold text-xl lg:text-2xl">
                     {todayStats.absent}
                   </div>
-                  <div className="text-gray-600 text-sm">غایب</div>
+                  <div className="text-gray-600 text-xs lg:text-sm">غایب</div>
                 </div>
-                <div className="bg-yellow-50 rounded-lg p-4">
-                  <div className="text-yellow-600 font-bold text-2xl">
+                <div className="bg-yellow-50 rounded-lg p-3 lg:p-4">
+                  <div className="text-yellow-600 font-bold text-xl lg:text-2xl">
                     {todayStats.leave}
                   </div>
-                  <div className="text-gray-600 text-sm">مرخصی</div>
+                  <div className="text-gray-600 text-xs lg:text-sm">مرخصی</div>
                 </div>
               </div>
 
@@ -306,20 +308,20 @@ function Attendance() {
                     return (
                       <div
                         key={memberId}
-                        className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50"
+                        className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 border rounded-lg hover:bg-gray-50 gap-2"
                       >
-                        <div className="flex-1">
-                          <div className="font-medium text-black">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-black text-sm lg:text-base">
                             {member.firstName} {member.lastName}
                           </div>
                           {data.reason && (
-                            <div className="text-sm text-gray-600">
+                            <div className="text-xs lg:text-sm text-gray-600 mt-1">
                               {data.reason}
                             </div>
                           )}
                         </div>
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${data.status === "حاضر"
+                          className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${data.status === "حاضر"
                             ? "bg-green-100 text-green-800"
                             : data.status === "غایب"
                               ? "bg-red-100 text-red-800"
@@ -335,30 +337,30 @@ function Attendance() {
               </div>
 
               {getTodayRecord().notes && (
-                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                  <div className="text-sm font-medium text-gray-700 mb-1">
+                <div className="mt-4 p-3 lg:p-4 bg-blue-50 rounded-lg">
+                  <div className="text-xs lg:text-sm font-medium text-gray-700 mb-1">
                     یادداشت روز:
                   </div>
-                  <div className="text-gray-600">{getTodayRecord().notes}</div>
+                  <div className="text-xs lg:text-sm text-gray-600">{getTodayRecord().notes}</div>
                 </div>
               )}
 
               <button
                 onClick={() => handleOpenForm()}
-                className="mt-4 w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                className="mt-4 w-full px-4 py-3 lg:py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 active:bg-indigo-800 text-sm lg:text-base min-h-[44px] lg:min-h-0"
               >
                 ویرایش حضور و غیاب امروز
               </button>
             </div>
           ) : (
-            <div className="text-center py-12">
-              <div className="text-gray-400 text-6xl mb-4"><FaClipboardCheck className="inline" /></div>
-              <p className="text-gray-600 mb-4">
+            <div className="text-center py-8 lg:py-12">
+              <div className="text-gray-400 text-4xl lg:text-6xl mb-4"><FaClipboardCheck className="inline" /></div>
+              <p className="text-gray-600 mb-4 text-sm lg:text-base">
                 هنوز حضور و غیاب امروز ثبت نشده است
               </p>
               <button
                 onClick={() => handleOpenForm()}
-                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 mx-auto"
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 active:bg-indigo-800 flex items-center justify-center gap-2 mx-auto text-sm lg:text-base min-h-[44px]"
               >
                 <FaPlus /> ثبت حضور و غیاب امروز
               </button>
@@ -369,11 +371,11 @@ function Attendance() {
 
       {activeTab === "history" && (
         <div>
-          <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <div className="bg-white rounded-xl p-4 lg:p-6 shadow-lg mb-6">
+            <h3 className="text-base lg:text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
               <FaCalendarAlt /> فیلتر بازه زمانی
             </h3>
-            <div className="flex gap-4">
+            <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   از تاریخ
@@ -383,7 +385,7 @@ function Attendance() {
                   onChange={(date) =>
                     setDateRange({ ...dateRange, startDate: date })
                   }
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-3 lg:py-2 border rounded-lg text-base"
                 />
               </div>
               <div className="flex-1">
@@ -395,13 +397,13 @@ function Attendance() {
                   onChange={(date) =>
                     setDateRange({ ...dateRange, endDate: date })
                   }
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-3 lg:py-2 border rounded-lg text-base"
                 />
               </div>
               <div className="flex items-end">
                 <button
                   onClick={() => setDateRange({ startDate: "", endDate: "" })}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                  className="w-full lg:w-auto px-4 py-3 lg:py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 active:bg-gray-400 text-sm lg:text-base min-h-[44px] lg:min-h-0"
                 >
                   پاک کردن
                 </button>
@@ -422,7 +424,7 @@ function Attendance() {
 
       {activeTab === "report" && (
         <div>
-          <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
             <StatCard
               title="کل حاضر"
               value={overallStats.present}

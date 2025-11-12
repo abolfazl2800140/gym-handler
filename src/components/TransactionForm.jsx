@@ -127,17 +127,7 @@ function TransactionForm({ transaction, onSave, onCancel }) {
               onChange={handleChange}
               rows="3"
               placeholder="توضیحات تراکنش"
-              style={{ 
-                padding: '12px 16px',
-                border: '2px solid #e2e8f0',
-                borderRadius: '10px',
-                fontSize: '14px',
-                transition: 'all 0.3s ease',
-                fontFamily: 'inherit',
-                resize: 'vertical',
-                color: '#2d3748',
-                background: 'white'
-              }}
+              className="w-full px-4 py-3 sm:py-3 border-2 border-gray-200 rounded-lg text-base sm:text-sm transition-all resize-vertical text-gray-800 bg-white focus:outline-none focus:border-indigo-500"
             />
           </div>
 

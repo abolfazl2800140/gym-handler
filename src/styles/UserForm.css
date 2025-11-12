@@ -9,8 +9,14 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: 0;
   animation: fadeIn 0.2s ease-out;
+}
+
+@media (min-width: 640px) {
+  .modal-overlay {
+    padding: 20px;
+  }
 }
 
 @keyframes fadeIn {
@@ -24,13 +30,23 @@
 
 .modal-content {
   background: white;
-  border-radius: 16px;
+  border-radius: 0;
   width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s ease-out;
+}
+
+@media (min-width: 640px) {
+  .modal-content {
+    border-radius: 16px;
+    max-width: 600px;
+    height: auto;
+    max-height: 90vh;
+  }
 }
 
 @keyframes slideUp {
@@ -48,20 +64,37 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px;
+  padding: 16px;
   border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}
+
+@media (min-width: 640px) {
+  .modal-header {
+    padding: 24px;
+    position: static;
+  }
 }
 
 .modal-header h2 {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
   color: #1a202c;
   margin: 0;
 }
 
+@media (min-width: 640px) {
+  .modal-header h2 {
+    font-size: 22px;
+  }
+}
+
 .close-button {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border: none;
   background: #f7fafc;
   border-radius: 8px;
@@ -72,6 +105,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .close-button {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .close-button:hover {
@@ -79,8 +120,20 @@
   color: #2d3748;
 }
 
+.close-button:active {
+  transform: scale(0.95);
+}
+
 .user-form {
-  padding: 24px;
+  padding: 16px;
+  padding-bottom: 80px;
+}
+
+@media (min-width: 640px) {
+  .user-form {
+    padding: 24px;
+    padding-bottom: 24px;
+  }
 }
 
 .error-message {
@@ -134,14 +187,22 @@
 
 .form-group input,
 .form-group select {
-  padding: 12px 16px;
+  padding: 14px 16px;
   border: 2px solid #e2e8f0;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 16px;
   transition: all 0.3s ease;
   font-family: inherit;
   color: #2d3748;
   background: white;
+}
+
+@media (min-width: 640px) {
+  .form-group input,
+  .form-group select {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
 }
 
 .form-group select option {
@@ -173,20 +234,47 @@
   display: flex;
   gap: 12px;
   margin-top: 24px;
-  padding-top: 24px;
+  padding-top: 16px;
   border-top: 1px solid #e2e8f0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 16px;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+@media (min-width: 640px) {
+  .form-actions {
+    position: static;
+    padding-top: 24px;
+    padding: 0;
+    padding-top: 24px;
+    box-shadow: none;
+  }
 }
 
 .btn-cancel,
 .btn-submit {
   flex: 1;
-  padding: 12px 24px;
+  padding: 14px 24px;
   border: none;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  touch-action: manipulation;
+}
+
+@media (min-width: 640px) {
+  .btn-cancel,
+  .btn-submit {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
 }
 
 .btn-cancel {
@@ -219,13 +307,5 @@
 @media (max-width: 640px) {
   .form-row {
     grid-template-columns: 1fr;
-  }
-
-  .modal-content {
-    max-height: 95vh;
-  }
-
-  .form-actions {
-    flex-direction: column-reverse;
   }
 }

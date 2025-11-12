@@ -42,9 +42,13 @@ function MemberProfile() {
       }
 
       // دریافت تراکنش‌های عضو
-      const transactionsRes = await transactionsAPI.getAll({ member_id: id });
+      const transactionsRes = await transactionsAPI.getAll();
       if (transactionsRes.success) {
-        setTransactions(transactionsRes.data);
+        // فیلتر کردن تراکنش‌های مربوط به این عضو
+        const memberTransactions = transactionsRes.data.filter(
+          t => t.memberId === parseInt(id) || t.member_id === parseInt(id)
+        );
+        setTransactions(memberTransactions);
       }
 
       // دریافت آمار حضور و غیاب

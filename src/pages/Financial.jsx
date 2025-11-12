@@ -245,27 +245,31 @@ function Financial() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+        <h1 className="text-2xl lg:text-3xl font-bold text-black flex items-center gap-2">
           <FaMoneyBillWave /> مدیریت مالی
         </h1>
-        <div className="flex gap-3">
+        <div className="flex gap-3 w-full lg:w-auto">
           <button
             onClick={handleExportToExcel}
-            className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all flex items-center gap-2"
+            className="flex-1 lg:flex-none px-4 lg:px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 active:bg-green-800 transition-all flex items-center justify-center gap-2 text-sm lg:text-base"
           >
-            <FaFileExcel /> خروجی Excel
+            <FaFileExcel />
+            <span className="hidden sm:inline">خروجی Excel</span>
+            <span className="sm:hidden">Excel</span>
           </button>
           <button
             onClick={handleAddTransaction}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all flex items-center gap-2"
+            className="flex-1 lg:flex-none px-4 lg:px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 active:bg-indigo-800 transition-all flex items-center justify-center gap-2 text-sm lg:text-base"
           >
-            <FaPlus /> ثبت تراکنش جدید
+            <FaPlus />
+            <span className="hidden sm:inline">ثبت تراکنش جدید</span>
+            <span className="sm:hidden">ثبت تراکنش</span>
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
         <StatCard
           title="کل درآمد"
           value={formatCurrency(stats.income)}
@@ -303,103 +307,186 @@ function Financial() {
         onDateRangeChange={setDateRangeFilter}
       />
 
-      <div className="bg-white backdrop-blur-lg rounded-xl overflow-hidden shadow-lg">
-        <table className="w-full">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-6 py-4 text-right text-sm font-medium text-black">
-                نوع
-              </th>
-              <th
-                className="px-6 py-4 text-right text-sm font-medium text-black cursor-pointer hover:bg-gray-200"
-                onClick={() => handleSort("title")}
-              >
-                عنوان{" "}
-                {sortField === "title" && (sortDirection === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                className="px-6 py-4 text-right text-sm font-medium text-black cursor-pointer hover:bg-gray-200"
-                onClick={() => handleSort("amount")}
-              >
-                مبلغ{" "}
-                {sortField === "amount" &&
-                  (sortDirection === "asc" ? "↑" : "↓")}
-              </th>
-              <th className="px-6 py-4 text-right text-sm font-medium text-black">
-                عضو مرتبط
-              </th>
-              <th className="px-6 py-4 text-right text-sm font-medium text-black">
-                دسته‌بندی
-              </th>
-              <th
-                className="px-6 py-4 text-right text-sm font-medium text-black cursor-pointer hover:bg-gray-200"
-                onClick={() => handleSort("date")}
-              >
-                تاریخ{" "}
-                {sortField === "date" && (sortDirection === "asc" ? "↑" : "↓")}
-              </th>
-              <th className="px-6 py-4 text-right text-sm font-medium text-black">
-                عملیات
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {sortedTransactions.map((transaction) => (
-              <tr
-                key={transaction.id}
-                className="hover:bg-gray-50 transition-colors"
-              >
-                <td className="px-6 py-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${transaction.type === "درآمد"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                      }`}
-                  >
-                    {transaction.type}
-                  </span>
-                </td>
-                <td className="px-6 py-4 font-medium text-black">
-                  {transaction.title}
-                </td>
-                <td className="px-6 py-4 text-black">
-                  {formatCurrency(transaction.amount)}
-                </td>
-                <td className="px-6 py-4 text-black">
-                  {getMemberName(transaction.memberId)}
-                </td>
-                <td className="px-6 py-4">
-                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {transaction.category}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-black">
-                  {new Date(transaction.date).toLocaleDateString("fa-IR")}
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEditTransaction(transaction)}
-                      className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
-                    >
-                      ویرایش
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(transaction.id)}
-                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
-                    >
-                      حذف
-                    </button>
-                  </div>
-                </td>
+      {/* نمای جدولی - فقط دسکتاپ */}
+      <div className="hidden lg:block bg-white backdrop-blur-lg rounded-xl overflow-hidden shadow-lg">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[900px]">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-6 py-4 text-right text-sm font-medium text-black">
+                  نوع
+                </th>
+                <th
+                  className="px-6 py-4 text-right text-sm font-medium text-black cursor-pointer hover:bg-gray-200"
+                  onClick={() => handleSort("title")}
+                >
+                  عنوان{" "}
+                  {sortField === "title" && (sortDirection === "asc" ? "↑" : "↓")}
+                </th>
+                <th
+                  className="px-6 py-4 text-right text-sm font-medium text-black cursor-pointer hover:bg-gray-200"
+                  onClick={() => handleSort("amount")}
+                >
+                  مبلغ{" "}
+                  {sortField === "amount" &&
+                    (sortDirection === "asc" ? "↑" : "↓")}
+                </th>
+                <th className="px-6 py-4 text-right text-sm font-medium text-black">
+                  عضو مرتبط
+                </th>
+                <th className="px-6 py-4 text-right text-sm font-medium text-black">
+                  دسته‌بندی
+                </th>
+                <th
+                  className="px-6 py-4 text-right text-sm font-medium text-black cursor-pointer hover:bg-gray-200"
+                  onClick={() => handleSort("date")}
+                >
+                  تاریخ{" "}
+                  {sortField === "date" && (sortDirection === "asc" ? "↑" : "↓")}
+                </th>
+                <th className="px-6 py-4 text-right text-sm font-medium text-black">
+                  عملیات
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {sortedTransactions.map((transaction) => (
+                <tr
+                  key={transaction.id}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-6 py-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${transaction.type === "درآمد"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                        }`}
+                    >
+                      {transaction.type}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 font-medium text-black">
+                    {transaction.title}
+                  </td>
+                  <td className="px-6 py-4 text-black">
+                    {formatCurrency(transaction.amount)}
+                  </td>
+                  <td className="px-6 py-4 text-black">
+                    {getMemberName(transaction.memberId)}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {transaction.category}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-black">
+                    {new Date(transaction.date).toLocaleDateString("fa-IR")}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditTransaction(transaction)}
+                        className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                      >
+                        ویرایش
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(transaction.id)}
+                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {sortedTransactions.length === 0 && (
           <div className="text-center py-12 text-gray-500">
             هیچ تراکنشی یافت نشد
+          </div>
+        )}
+      </div>
+
+      {/* نمای کارتی - فقط موبایل */}
+      <div className="lg:hidden space-y-4">
+        {sortedTransactions.map((transaction) => (
+          <div
+            key={transaction.id}
+            className="bg-white rounded-xl p-4 shadow-lg border border-gray-200"
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-gray-800 text-base mb-1 truncate">
+                  {transaction.title}
+                </h3>
+                <p className="text-xs text-gray-500">
+                  {new Date(transaction.date).toLocaleDateString("fa-IR")}
+                </p>
+              </div>
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-medium flex-shrink-0 mr-2 ${
+                  transaction.type === "درآمد"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-red-100 text-red-800"
+                }`}
+              >
+                {transaction.type}
+              </span>
+            </div>
+
+            <div className="space-y-2 mb-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">مبلغ:</span>
+                <span className="font-bold text-gray-800">
+                  {formatCurrency(transaction.amount)}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">دسته‌بندی:</span>
+                <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  {transaction.category}
+                </span>
+              </div>
+              {transaction.memberId && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">عضو:</span>
+                  <span className="text-gray-800">
+                    {getMemberName(transaction.memberId)}
+                  </span>
+                </div>
+              )}
+              {transaction.description && (
+                <div className="text-sm pt-2 border-t border-gray-100">
+                  <span className="text-gray-500">توضیحات: </span>
+                  <span className="text-gray-700">{transaction.description}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-2 pt-3 border-t border-gray-200">
+              <button
+                onClick={() => handleEditTransaction(transaction)}
+                className="flex-1 px-3 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:bg-blue-700 text-sm font-medium transition-colors"
+              >
+                ویرایش
+              </button>
+              <button
+                onClick={() => handleDeleteClick(transaction.id)}
+                className="flex-1 px-3 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 active:bg-red-700 text-sm font-medium transition-colors"
+              >
+                حذف
+              </button>
+            </div>
+          </div>
+        ))}
+
+        {sortedTransactions.length === 0 && (
+          <div className="text-center py-12 bg-white rounded-xl">
+            <p className="text-gray-500">هیچ تراکنشی یافت نشد</p>
           </div>
         )}
       </div>
