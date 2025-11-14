@@ -1,15 +1,52 @@
 /* دکمه همبرگر - فقط در موبایل */
 .mobile-menu-button {
-  @apply fixed top-4 left-4 z-50 lg:hidden
-  w-12 h-12 bg-white rounded-lg shadow-lg
-  flex items-center justify-center text-gray-800 text-xl
-  hover:bg-gray-100 transition-all active:scale-95;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+  width: 48px;
+  height: 48px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2d3748;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-button:hover {
+  background: #f7fafc;
+  transform: scale(1.05);
+}
+
+.mobile-menu-button:active {
+  transform: scale(0.95);
+}
+
+@media (min-width: 1024px) {
+  .mobile-menu-button {
+    display: none;
+  }
 }
 
 /* Overlay برای موبایل */
 .mobile-overlay {
-  @apply fixed inset-0 bg-black/50 z-40 lg:hidden;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 40;
   animation: fadeIn 0.3s ease-out;
+}
+
+@media (min-width: 1024px) {
+  .mobile-overlay {
+    display: none;
+  }
 }
 
 @keyframes fadeIn {
@@ -18,87 +55,201 @@
 }
 
 .sidebar {
-  @apply w-64 h-screen bg-white backdrop-blur-lg flex flex-col;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-  
-  /* در دسکتاپ: relative و ثابت */
-  @apply relative;
-  
-  /* در موبایل: fixed و مخفی در سمت راست */
-  @apply lg:relative lg:translate-x-0;
-  @apply max-lg:fixed max-lg:top-0 max-lg:right-0 max-lg:z-50 max-lg:translate-x-full;
-  
-  /* انیمیشن */
-  @apply transition-transform duration-300;
+  width: 280px;
+  height: 100vh;
+  background: linear-gradient(180deg, #4299e1 0%, #3182ce 100%);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 20px rgba(66, 153, 225, 0.15);
+  position: relative;
+  transition: transform 0.3s ease;
 }
 
-/* وقتی منوی موبایل باز است */
-.sidebar.mobile-open {
-  @apply translate-x-0;
-}
-
-.sidebar-header {
-  @apply p-6 border-b border-white/20;
-}
-
-.sidebar-header h2 {
-  @apply text-2xl font-bold text-white;
+@media (max-width: 1023px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 50;
+    transform: translateX(100%);
+  }
+  
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
 }
 
 /* اطلاعات کاربر */
 .sidebar-user {
-  @apply flex items-center gap-3 p-4 border-b border-white/20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .user-avatar {
-  @apply w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 
-  flex items-center justify-center text-white flex-shrink-0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .user-avatar svg {
-  @apply w-6 h-6;
+  width: 28px;
+  height: 28px;
 }
 
 .user-info {
-  @apply flex flex-col gap-1 min-w-0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
 }
 
 .user-name {
-  @apply text-sm font-bold text-gray-800 truncate;
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .user-role {
-  @apply text-xs text-gray-600;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
+.user-role svg {
+  font-size: 12px;
+}
+
+/* منوی ناوبری */
 .sidebar-nav {
-  @apply flex flex-col gap-2 p-4 flex-1 overflow-y-auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .sidebar-nav a {
-  @apply flex items-center gap-3 px-4 py-3 text-black rounded-lg 
-  transition-all font-medium hover:bg-gray-400;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-nav a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-nav a:hover::before {
+  opacity: 1;
 }
 
 .sidebar-nav a .icon {
-  @apply text-xl;
+  font-size: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar-nav a span {
+  position: relative;
+  z-index: 1;
 }
 
 .sidebar-nav a.active {
-  @apply bg-gray-400 text-white;
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-nav a.active::before {
+  opacity: 0;
 }
 
 /* دکمه خروج */
 .sidebar-footer {
-  @apply p-4 border-t border-white/20;
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .logout-button {
-  @apply w-full flex items-center justify-center gap-3 px-4 py-3 
-  bg-red-500/10 text-red-600 rounded-lg transition-all font-medium 
-  hover:bg-red-500 hover:text-white;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(239, 68, 68, 0.15);
+  color: white;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #ef4444;
+  border-color: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.logout-button:active {
+  transform: translateY(0);
 }
 
 .logout-button .icon {
-  @apply text-xl;
+  font-size: 18px;
 }

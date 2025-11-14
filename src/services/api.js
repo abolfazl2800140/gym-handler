@@ -202,35 +202,58 @@ export const activityLogsAPI = {
 // Users API
 export const usersAPI = {
   getAll: () => apiCall('/users'),
-  
+
   getById: (id) => apiCall(`/users/${id}`),
-  
+
   create: (userData) => apiCall('/users', {
     method: 'POST',
     body: JSON.stringify(userData),
   }),
-  
+
   update: (id, userData) => apiCall(`/users/${id}`, {
     method: 'PUT',
     body: JSON.stringify(userData),
   }),
-  
+
   delete: (id) => apiCall(`/users/${id}`, {
     method: 'DELETE',
   }),
-  
+
   changePassword: (id, passwordData) => apiCall(`/users/${id}/change-password`, {
     method: 'PUT',
     body: JSON.stringify(passwordData),
   }),
-  
+
   toggleStatus: (id) => apiCall(`/users/${id}/toggle-status`, {
     method: 'PUT',
   }),
-  
+
   getStats: (id) => apiCall(`/users/${id}/stats`),
-  
+
   getActivities: (id, limit = 20) => apiCall(`/users/${id}/activities?limit=${limit}`),
+};
+
+// Plans API
+export const plansAPI = {
+  getAll: () => apiCall('/plans'),
+
+  getActive: () => apiCall('/plans/active'),
+
+  getById: (id) => apiCall(`/plans/${id}`),
+
+  create: (planData) => apiCall('/plans', {
+    method: 'POST',
+    body: JSON.stringify(planData),
+  }),
+
+  update: (id, planData) => apiCall(`/plans/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(planData),
+  }),
+
+  toggleStatus: (id) => apiCall(`/plans/${id}/toggle`, {
+    method: 'PATCH',
+  }),
 };
 
 // Health check

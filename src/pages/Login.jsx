@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../services/auth';
+import { useAuth } from '../contexts/AuthContext';
 import '../styles/Login.css';
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loginType, setLoginType] = useState('admin'); // 'admin' or 'member'
 
   const handleChange = (e) => {
     setFormData({
@@ -26,11 +28,25 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await authService.login(formData);
-      
+      const response = await login(formData, loginType);
+
       if (response.success) {
-        // موفق - هدایت به صفحه اصلی
-        navigate('/members');
+        // هدایت به صفحه مناسب
+        if (loginType === 'admin') {
+          // بررسی نوع ادمین
+          if (response.user.role === 'chef') {
+            navigate('/buffet/dashboard');
+          } else {
+            navigate('/members');
+          }
+        } else {
+          // ورود اعضا (ورزشکار/مربی)
+          if (response.user.memberType === 'مربی') {
+            navigate('/coach-dashboard');
+          } else {
+            navigate('/athlete-dashboard');
+          }
+        }
       }
     } catch (err) {
       setError(err.message || 'خطا در ورود به سیستم');
@@ -60,6 +76,24 @@ function Login() {
           </div>
           <h1>ورود به سیستم</h1>
           <p>سیستم مدیریت باشگاه</p>
+
+          {/* انتخاب نوع ورود */}
+          <div className="login-type-selector">
+            <button
+              type="button"
+              className={`type-btn ${loginType === 'admin' ? 'active' : ''}`}
+              onClick={() => setLoginType('admin')}
+            >
+              ورود ادمین
+            </button>
+            <button
+              type="button"
+              className={`type-btn ${loginType === 'member' ? 'active' : ''}`}
+              onClick={() => setLoginType('member')}
+            >
+              ورود اعضا
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
@@ -122,22 +156,6 @@ function Login() {
             )}
           </button>
         </form>
-
-        <div className="login-footer">
-          <p className="demo-info">
-            <strong>حساب‌های آزمایشی:</strong>
-          </p>
-          <div className="demo-accounts">
-            <div className="demo-account">
-              <span className="demo-role super-admin">Super Admin</span>
-              <span className="demo-credentials">superadmin / Admin@123</span>
-            </div>
-            <div className="demo-account">
-              <span className="demo-role admin">Admin</span>
-              <span className="demo-credentials">admin1 / Admin123</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

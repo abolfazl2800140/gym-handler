@@ -125,10 +125,27 @@ export const authService = {
   },
 
   /**
-   * ورود کاربر
+   * ورود کاربر (ادمین)
    */
   login: async (credentials) => {
     const response = await authApiCall('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+    });
+
+    if (response.success && response.token) {
+      tokenManager.setToken(response.token);
+      userManager.setUser(response.user);
+    }
+
+    return response;
+  },
+
+  /**
+   * ورود اعضا (ورزشکار/مربی)
+   */
+  memberLogin: async (credentials) => {
+    const response = await authApiCall('/member-auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });

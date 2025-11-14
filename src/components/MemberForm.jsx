@@ -12,7 +12,10 @@ function MemberForm({ member, onSave, onCancel }) {
     membershipLevel: "برنزی",
     subscriptionStatus: "فعال",
     gender: "مرد",
+    username: "",
   });
+
+  const [suggestedUsername, setSuggestedUsername] = useState("");
 
   useEffect(() => {
     if (member) {
@@ -26,10 +29,39 @@ function MemberForm({ member, onSave, onCancel }) {
   };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    // اگر نام یا نام خانوادگی تغییر کرد، username پیشنهادی بساز
+    if ((name === 'firstName' || name === 'lastName') && !member) {
+      const firstName = name === 'firstName' ? value : formData.firstName;
+      const lastName = name === 'lastName' ? value : formData.lastName;
+
+      if (firstName && lastName) {
+        const suggested = `${transliterate(firstName)}.${transliterate(lastName)}`.toLowerCase();
+        setSuggestedUsername(suggested);
+
+        // اگر username خالی است، پیشنهاد رو بذار
+        if (!formData.username) {
+          setFormData(prev => ({ ...prev, username: suggested }));
+        }
+      }
+    }
+  };
+
+  // تبدیل فارسی به انگلیسی
+  const transliterate = (text) => {
+    const map = {
+      'ا': 'a', 'آ': 'a', 'ب': 'b', 'پ': 'p', 'ت': 't', 'ث': 's', 'ج': 'j', 'چ': 'ch',
+      'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'z', 'ر': 'r', 'ز': 'z', 'ژ': 'zh', 'س': 's',
+      'ش': 'sh', 'ص': 's', 'ض': 'z', 'ط': 't', 'ظ': 'z', 'ع': 'a', 'غ': 'gh', 'ف': 'f',
+      'ق': 'gh', 'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'و': 'v', 'ه': 'h',
+      'ی': 'i', 'ئ': 'i', 'ة': 'e', ' ': '.'
+    };
+    return text.split('').map(char => map[char] || char).join('');
   };
 
   return (
@@ -98,6 +130,31 @@ function MemberForm({ member, onSave, onCancel }) {
               </select>
             </div>
           </div>
+
+          {!member && (
+            <div className="form-group">
+              <label htmlFor="username">نام کاربری (انگلیسی) *</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+                pattern="[a-z0-9._-]+"
+                placeholder="ali.ahmadi"
+                style={{ direction: 'ltr', textAlign: 'left' }}
+              />
+              {suggestedUsername && (
+                <small style={{ color: '#718096', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                  💡 پیشنهاد: {suggestedUsername}
+                </small>
+              )}
+              <small style={{ color: '#718096', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                فقط حروف انگلیسی کوچک، اعداد، نقطه، خط تیره و زیرخط مجاز است
+              </small>
+            </div>
+          )}
 
           <div className="form-group">
             <PersianDatePicker

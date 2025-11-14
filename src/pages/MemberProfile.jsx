@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  FaArrowLeft, FaEdit, FaMoneyBillWave, FaTrash, FaClipboardList, 
-  FaPhone, FaBirthdayCake, FaUser, FaStar, FaCalendar, FaCheck, 
-  FaTimes, FaDollarSign, FaChartBar, FaCalendarAlt, FaCheckCircle, FaTimesCircle 
+import {
+  FaArrowLeft, FaEdit, FaMoneyBillWave, FaTrash, FaClipboardList,
+  FaPhone, FaBirthdayCake, FaUser, FaStar, FaCalendar, FaCheck,
+  FaTimes, FaDollarSign, FaChartBar, FaCalendarAlt, FaCheckCircle, FaTimesCircle
 } from 'react-icons/fa';
 import { membersAPI, transactionsAPI, attendanceAPI } from '../services/api';
 import notification from '../services/notification';
@@ -34,7 +34,7 @@ function MemberProfile() {
   const fetchMemberData = async () => {
     try {
       setLoading(true);
-      
+
       // دریافت اطلاعات عضو
       const memberRes = await membersAPI.getById(id);
       if (memberRes.success) {
@@ -174,7 +174,7 @@ function MemberProfile() {
             </div>
           </div>
         </div>
-        
+
         <div className="member-actions">
           <button onClick={() => setShowEditForm(true)} className="btn-action edit">
             <FaEdit /> ویرایش
@@ -190,19 +190,19 @@ function MemberProfile() {
 
       {/* تب‌ها */}
       <div className="tabs">
-        <button 
+        <button
           className={activeTab === 'info' ? 'active' : ''}
           onClick={() => setActiveTab('info')}
         >
           <FaClipboardList /> اطلاعات شخصی
         </button>
-        <button 
+        <button
           className={activeTab === 'transactions' ? 'active' : ''}
           onClick={() => setActiveTab('transactions')}
         >
           <FaMoneyBillWave /> تراکنش‌ها
         </button>
-        <button 
+        <button
           className={activeTab === 'attendance' ? 'active' : ''}
           onClick={() => setActiveTab('attendance')}
         >
@@ -219,6 +219,12 @@ function MemberProfile() {
               <div className="info-label"><FaPhone /> شماره تماس</div>
               <div className="info-value">{member.phone}</div>
             </div>
+            {member.username && (
+              <div className="info-card highlight">
+                <div className="info-label"><FaUser /> نام کاربری</div>
+                <div className="info-value username">{member.username}</div>
+              </div>
+            )}
             <div className="info-card">
               <div className="info-label"><FaUser /> جنسیت</div>
               <div className="info-value">{member.gender || 'مرد'}</div>
@@ -333,8 +339,8 @@ function MemberProfile() {
 
                 <div className="attendance-chart">
                   <div className="chart-bar">
-                    <div 
-                      className="chart-fill present" 
+                    <div
+                      className="chart-fill present"
                       style={{ width: `${attendancePercentage}%` }}
                     >
                       {attendancePercentage > 10 && `${attendancePercentage}%`}
