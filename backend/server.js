@@ -30,7 +30,7 @@ const corsOptions = {
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Content-Range', 'X-Content-Range'],
   maxAge: 600 // 10 minutes
@@ -60,6 +60,16 @@ app.use('/api/reports', require('./routes/reports'));
 app.use('/api/ai', require('./routes/ai'));
 app.use('/api/activity-logs', require('./routes/activityLogs'));
 app.use('/api/system', require('./routes/system'));
+app.use('/api/plans', require('./routes/plans'));
+
+// Member routes (ورزشکاران و مربیان)
+app.use('/api/member-auth', require('./routes/memberAuth'));
+app.use('/api/member-dashboard', require('./routes/memberDashboard'));
+
+// Buffet routes (بوفه)
+app.use('/api/buffet-products', require('./routes/buffetProducts'));
+app.use('/api/buffet-sales', require('./routes/buffetSales'));
+app.use('/api/wallet', require('./routes/wallet'));
 
 // Health check
 app.get('/api/health', (req, res) => {

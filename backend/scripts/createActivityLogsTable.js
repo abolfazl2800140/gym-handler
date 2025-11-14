@@ -27,6 +27,7 @@ const createActivityLogsTable = async () => {
         entity_id INTEGER,
         description TEXT,
         ip_address VARCHAR(45),
+        user_agent TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -50,6 +51,7 @@ const createActivityLogsTable = async () => {
     console.log('   - entity_id: شناسه موجودیت');
     console.log('   - description: توضیحات');
     console.log('   - ip_address: آدرس IP');
+    console.log('   - user_agent: اطلاعات مرورگر و دستگاه');
     console.log('   - created_at: زمان ثبت');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 

@@ -28,7 +28,7 @@ const activityLoggerMiddleware = (req, res, next) => {
     // Store original methods
     const originalJson = res.json;
     const originalSend = res.send;
-    
+
     // Flag to prevent duplicate logging
     let logged = false;
 
@@ -162,7 +162,7 @@ const logActivityFromRequest = (req, res, responseData) => {
     else if (path.match(/\/users\/\d+$/) && method !== 'GET') {
         entityType = 'کاربر';
         const userId = req.params.id;
-        
+
         if (method === 'PUT') {
             action = 'ویرایش';
             const user = req.body;
@@ -187,7 +187,7 @@ const logActivityFromRequest = (req, res, responseData) => {
         action = 'تغییر رمز';
         const userId = req.params.id;
         const isOwnPassword = req.user?.id === parseInt(userId);
-        description = isOwnPassword 
+        description = isOwnPassword
             ? `رمز عبور خود را تغییر داد`
             : `رمز عبور کاربر (ID: ${userId}) را تغییر داد`;
         entityId = parseInt(userId);
@@ -201,6 +201,32 @@ const logActivityFromRequest = (req, res, responseData) => {
         const newStatus = responseData?.is_active ? 'فعال' : 'غیرفعال';
         description = `وضعیت کاربر (ID: ${userId}) به ${newStatus} تغییر کرد`;
         entityId = parseInt(userId);
+    }
+
+    // Plans (مدیریت پلن‌ها)
+    else if (path.includes('/plans') && !path.includes('/plans/active')) {
+        entityType = 'پلن';
+        const planId = req.params.id;
+
+        if (method === 'POST') {
+            action = 'ایجاد';
+            const plan = req.body;
+            description = `پلن جدید ایجاد شد: ${plan.name} (${plan.duration_days} روز - ${parseInt(plan.price).toLocaleString('fa-IR')} تومان)`;
+            entityId = responseData?.data?.id;
+        } else if (method === 'PUT') {
+            action = 'ویرایش';
+            const plan = req.body;
+            description = `پلن ویرایش شد: ${plan.name}`;
+            entityId = parseInt(planId);
+        } else if (method === 'PATCH' && path.includes('toggle')) {
+            action = 'تغییر وضعیت';
+            const newStatus = responseData?.data?.is_active ? 'فعال' : 'غیرفعال';
+            const planName = responseData?.data?.name || 'نامشخص';
+            description = `وضعیت پلن "${planName}" به ${newStatus} تغییر کرد`;
+            entityId = parseInt(planId);
+        } else {
+            return;
+        }
     }
 
     // AI Assistant
@@ -231,7 +257,7 @@ const logActivityFromRequest = (req, res, responseData) => {
 };
 
 // Export both middleware and helper function
-module.exports = { 
-  activityLoggerMiddleware, 
-  logActivity 
+module.exports = {
+    activityLoggerMiddleware,
+    logActivity
 };
